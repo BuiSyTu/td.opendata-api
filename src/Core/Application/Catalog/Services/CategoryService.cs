@@ -31,6 +31,12 @@ public class CategoryService : ICategoryService
 
     public async Task<Result<Guid>> CreateAsync(CreateCategoryRequest request)
     {
+        if (request.ParentId != default)
+        {
+            bool brandExists = await _repository.ExistsAsync<Brand>(a => a.Id == request.ParentId);
+            if (!brandExists) throw new EntityNotFoundException(string.Format(_localizer["category.notfound"], request.ParentId));
+        }
+
         bool itemExists = await _repository.ExistsAsync<Category>(a => a.Name == request.Name);
         if (itemExists) throw new EntityAlreadyExistsException(string.Format(_localizer["category.alreadyexists"], request.Name));
         string itemImagePath = await _file.UploadAsync<Category>(request.Image, FileType.Image);
