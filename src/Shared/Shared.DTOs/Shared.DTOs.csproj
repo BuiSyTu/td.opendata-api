@@ -4,4 +4,7 @@
         <RootNamespace>TD.OpenData.WebApi.Shared.DTOs</RootNamespace>
         <AssemblyName>TD.OpenData.WebApi.Shared.DTOs</AssemblyName>
     </PropertyGroup>
+    <ItemGroup>
+      <Folder Include="Catalog\Dataset\" />
+    </ItemGroup>
 </Project>
