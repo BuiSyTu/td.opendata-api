@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>TD.OpenData.WebApi.Domain</RootNamespace>
+        <AssemblyName>TD.OpenData.WebApi.Domain</AssemblyName>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="NewId" Version="4.0.0-develop.44" />
+    </ItemGroup>
+</Project>

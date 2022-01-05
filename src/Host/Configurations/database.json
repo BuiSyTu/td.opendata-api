@@ -1,0 +1,6 @@
+{
+  "DatabaseSettings": {
+    "DBProvider": "mssql",
+    "ConnectionString": "Server=192.168.2.29; Database=OpenDataWebAPIApplication;User Id=sa; Password=11091991; Trusted_Connection=False; MultipleActiveResultSets=true;"
+  }
+}
