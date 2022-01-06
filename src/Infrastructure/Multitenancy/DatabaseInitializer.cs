@@ -37,8 +37,7 @@ public static class DatabaseInitializer
             InitializeTenantDatabase(serviceProvider, dbSettings.DBProvider!, dbSettings.ConnectionString!, tenant);
         }
 
-        _logger.Information("For documentations and guides, visit https://www.fullstackhero.net");
-        _logger.Information("To Sponsor this project, visit https://opencollective.com/fullstackhero");
+        _logger.Information("To Sponsor this project");
     }
 
     private static void InitializeTenantDatabase(IServiceProvider serviceProvider, string dbProvider, string rootConnectionString, Tenant tenant)
