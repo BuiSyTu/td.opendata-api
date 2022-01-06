@@ -142,7 +142,7 @@ public class Result<T> : Result, IResult<T>
         return new() { Succeeded = true, Data = data, Messages = messages };
     }
 
-    public static new Task<Result<T>> SuccessAsync()
+    public static new Task<Result<T>> SuccessAsync(Task<List<Shared.DTOs.Catalog.AttachmentDto>> listFile)
     {
         return Task.FromResult(Success());
     }

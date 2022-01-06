@@ -42,7 +42,6 @@ public class ProductsController : BaseController
     }
 
     [HttpPost]
-    [MustHavePermission(PermissionConstants.Products.Register)]
     public async Task<ActionResult<Result<Guid>>> CreateAsync(CreateProductRequest request)
     {
         return Ok(await _service.CreateProductAsync(request));

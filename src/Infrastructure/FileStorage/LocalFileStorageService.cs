@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using TD.OpenData.WebApi.Application.FileStorage;
 using TD.OpenData.WebApi.Domain.Common;
 using TD.OpenData.WebApi.Infrastructure.Common.Extensions;
+using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using TD.OpenData.WebApi.Shared.DTOs.FileStorage;
 
 namespace TD.OpenData.WebApi.Infrastructure.FileStorage;
@@ -66,6 +67,81 @@ public class LocalFileStorageService : IFileStorageService
         {
             return Task.FromResult(string.Empty);
         }
+    }
+
+
+
+    public Task<List<AttachmentDto>> UploadFilesAsync<T>(CreateAttachmentRequest? request)
+    where T : class
+    {
+        List<AttachmentDto> listFile = new List<AttachmentDto>();
+        var files = request.Files;
+        long size = files.Sum(f => f.Length);
+
+        if (files.Any(f => f.Length == 0))
+        {
+            throw new InvalidOperationException("File Not Found.");
+        }
+
+
+        string folder = typeof(T).Name;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            folder = folder.Replace(@"\", "/");
+        }
+
+        string folderName = Path.Combine("Files", "Others", folder);
+
+        string pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        bool exists = Directory.Exists(pathToSave);
+        if (!exists)
+        {
+            Directory.CreateDirectory(pathToSave);
+        }
+
+        foreach (var formFile in files)
+        {
+            if (formFile.Length > 0)
+            {
+                var fileName = formFile.FileName.Trim('"');
+                fileName = RemoveSpecialCharacters(fileName);
+                fileName = fileName.ReplaceWhitespace("-");
+
+                Guid dir_UUID = Guid.NewGuid();
+                string dir_UUID_String = dir_UUID.ToString();
+
+
+                var target = Path.Combine(pathToSave, dir_UUID_String);
+                if (!Directory.Exists(target))
+                {
+                    Directory.CreateDirectory(target);
+                }
+
+                var fullPath = Path.Combine(target, fileName);
+                var dbPath = Path.Combine(folderName, dir_UUID_String, fileName);
+
+                if (File.Exists(dbPath))
+                {
+                    dbPath = NextAvailableFilename(dbPath);
+                    fullPath = NextAvailableFilename(fullPath);
+                }
+
+                using var stream = new FileStream(fullPath, FileMode.Create);
+                formFile.CopyTo(stream);
+                dbPath = dbPath.Replace("\\", "/");
+
+
+                var attachment = new AttachmentDto();
+                attachment.Name = fileName;
+                attachment.Type = Path.GetExtension(formFile.FileName);
+                attachment.Url = "{server_url}/" + dbPath;
+
+                listFile.Add(attachment);
+
+            }
+        }
+
+        return Task.FromResult(listFile);
     }
 
     public static string RemoveSpecialCharacters(string str)
