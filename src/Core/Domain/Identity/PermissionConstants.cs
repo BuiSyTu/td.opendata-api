@@ -44,4 +44,27 @@ public partial class PermissionConstants
         public const string Export = "Permissions.Users.Export";
         public const string Search = "Permissions.Users.Search";
     }
+
+
+    [DisplayName("Opendatas")]
+    [Description("Opendatas Permissions")]
+    public static class Opendata
+    {
+        public const string QTDanhMuc = "QTDanhMuc";
+        public const string QTDanhMucTTHC = "QTDanhMucTTHC";
+        public const string DataHTThuThap = "DataHT.ThuThap";
+        public const string DataHTDuyet = "DataHT.Duyet";
+        public const string DataHTKhaiThac = "DataHT.KhaiThac";
+        public const string DataHTChiaSe = "DataHT.ChiaSe";
+        public const string DataDVThuThap = "DataDV.ThuThap";
+        public const string DataDVDuyet = "DataDV.Duyet";
+        public const string DataDVKhaiThac = "DataDV.KhaiThac";
+        public const string DataDVChiaSe = "DataDV.ChiaSe";
+        public const string CongCanBoQTDanhMuc = "CongCanBo.QTDanhMuc";
+        public const string CongCanBoTraCuuDL = "CongCanBo.TraCuuDL";
+        public const string CongMoQTDanhMuc = "CongMo.QTDanhMuc";
+        public const string CongMoQTTaiKhoan = "CongMo.QTTaiKhoan";
+        public const string CongMoQTDuLieu = "CongMo.QTDuLieu";
+    }
+
 }

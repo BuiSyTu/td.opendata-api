@@ -135,10 +135,24 @@ internal static class Startup
 
         services.AddAuthorization(x =>
         {
-            x.AddPolicy("Readonly",
-              policy => policy.RequireClaim("permissions", "app1.readonly"));
-            x.AddPolicy("Write",
-              policy => policy.RequireClaim("permissions", "app1.readwrite"));
+            x.AddPolicy("QTDanhMuc", policy => policy.RequireClaim("permissions", "QTDanhMuc"));
+            x.AddPolicy("QTDanhMucTTHC", policy => policy.RequireClaim("permissions", "QTDanhMucTTHC"));
+
+            x.AddPolicy("DataHTThuThap", policy => policy.RequireClaim("permissions", "DataHT.ThuThap"));
+            x.AddPolicy("DataHTDuyet", policy => policy.RequireClaim("permissions", "DataHT.Duyet"));
+            x.AddPolicy("DataHTChiaSe", policy => policy.RequireClaim("permissions", "DataHT.ChiaSe"));
+            x.AddPolicy("DataHTKhaiThac", policy => policy.RequireClaim("permissions", "DataHT.KhaiThac"));
+
+            x.AddPolicy("DataDVThuThap", policy => policy.RequireClaim("permissions", "DataDV.ThuThap"));
+            x.AddPolicy("DataDVDuyet", policy => policy.RequireClaim("permissions", "DataDV.Duyet"));
+            x.AddPolicy("DataDVKhaiThac", policy => policy.RequireClaim("permissions", "DataDV.KhaiThac"));
+            x.AddPolicy("DataDVChiaSe", policy => policy.RequireClaim("permissions", "DataDV.ChiaSe"));
+
+            x.AddPolicy("CongCanBoQTDanhMuc", policy => policy.RequireClaim("permissions", "CongCanBo.QTDanhMuc"));
+            x.AddPolicy("CongCanBoTraCuuDL", policy => policy.RequireClaim("permissions", "CongCanBo.TraCuuDL"));
+            x.AddPolicy("CongMoQTDanhMuc", policy => policy.RequireClaim("permissions", "CongMo.QTDanhMuc"));
+            x.AddPolicy("CongMoQTTaiKhoan", policy => policy.RequireClaim("permissions", "CongMo.QTTaiKhoan"));
+            x.AddPolicy("CongMoQTDuLieu", policy => policy.RequireClaim("permissions", "CongMo.QTDuLieu"));
         });
         return services;
     }
