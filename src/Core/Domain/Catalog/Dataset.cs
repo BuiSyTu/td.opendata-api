@@ -1,4 +1,4 @@
-using TD.OpenData.WebApi.Domain.Common;
+﻿using TD.OpenData.WebApi.Domain.Common;
 using TD.OpenData.WebApi.Domain.Common.Contracts;
 using TD.OpenData.WebApi.Domain.Contracts;
 
@@ -6,33 +6,52 @@ namespace TD.OpenData.WebApi.Domain.Catalog;
 
 public class Dataset : AuditableEntity, IMustHaveTenant
 {
+    //Tên dữ liệu
     public string? Name { get;  set; }
+    //Tiêu dề dữ liệu
     public string? Title { get; set; }
+    //Mô tả
     public string? Description { get;  set; }
+    //Mã dữ liệu
     public string? Code { get; set; }
+    //Từ khóa dữ liệu
     public string? Tags { get; set; }
+    //Trạng thái của dữ liệu
+    //0 = chưa duyệt
+    //1 = đã duyệt
+    //2 = bị từ chối
     public int? State { get;  set; }
+    //Public ra cổng của công dân hay không
+    //True: public
+    //False: private
     public bool? Visibility { get; set; }
+    //Giấy phép
     public Guid? LicenseId { get; set; }
     public virtual License License { get; set; } = default!;
-
+    //Tác giả
     public string? Author { get; set; }
+    //Email của tác giả
     public string? AuthorEmail { get; set; }
+    //Người bảo trì
     public string? Maintainer { get; set; }
+    //Email người bảo trì
     public string? MaintainerEmail { get; set; }
+    //Đơn vị tạo dữ liệu
     public Guid? OrganizationId { get; set; }
     public virtual Organization Organization { get; set; } = default!;
-
+    //Nguồn dữ liệu
     public string? Resource { get; set; }
+    //Loại dữ liệu
     public Guid? DataTypeId { get; set; }
     public virtual DataType DataType { get; set; } = default!;
-
+    //Lĩnh vực của dữ liệu
     public Guid? CategoryId { get; set; }
     public virtual Category Category { get; set; } = default!;
-
+    //Hình thức cung cấp
     public Guid? ProviderTypeId { get; set; }
     public virtual ProviderType ProviderType { get; set; } = default!;
 
+    public virtual ICollection<DatasetOffice> DatasetOffices { get; set; } = new List<DatasetOffice>();
 
     public virtual ICollection<CustomField> CustomFields { get; set; } = new List<CustomField>();
     public virtual ICollection<Metadata> Metadatas { get; set; } = new List<Metadata>();

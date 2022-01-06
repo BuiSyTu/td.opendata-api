@@ -37,6 +37,9 @@ public class ApplicationDbContext : BaseDbContext
     public DbSet<Organization> Organizations => Set<Organization>();
     public DbSet<ProviderType> ProviderTypes => Set<ProviderType>();
     public DbSet<Tag> Tags => Set<Tag>();
+    public DbSet<Attachment> Attachments => Set<Attachment>();
+    public DbSet<DatasetOffice> DatasetOffices => Set<DatasetOffice>();
+
 
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -111,6 +114,8 @@ public class ApplicationDbContext : BaseDbContext
         builder.ApplyConfiguration(new ProviderTypeConfiguration());
 
         builder.ApplyConfiguration(new TagConfiguration());
+        builder.ApplyConfiguration(new DatasetOfficeConfiguration());
+        builder.ApplyConfiguration(new AttachmentConfiguration());
 
         base.OnModelCreating(builder);
     }

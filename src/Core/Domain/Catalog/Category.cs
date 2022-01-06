@@ -15,7 +15,7 @@ public class Category : AuditableEntity, IMustHaveTenant
     public int? Order { get; set; }
     public Guid? ParentId { get; private set; }
     public virtual Category Parent { get; set; }
-    public virtual ICollection<Category> Children { get; set; }
+    public virtual ICollection<Category> Children { get; set; } = new List<Category>();
     public string? Tenant { get; set; }
     public virtual ICollection<Dataset> Datasets { get; set; } = new List<Dataset>();
 

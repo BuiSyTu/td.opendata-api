@@ -29,6 +29,8 @@ internal class DatasetConfiguration : IEntityTypeConfiguration<Dataset>
         builder.HasOne<DatasetDBConfig>(s => s.DatasetDBConfig).WithOne(ad => ad.Dataset).HasForeignKey<DatasetDBConfig>(ad => ad.DatasetId).OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany<Metadata>(x => x.Metadatas).WithOne(s => s.Dataset).HasForeignKey(s => s.DatasetId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany<DatasetOffice>(x => x.DatasetOffices).WithOne(s => s.Dataset).HasForeignKey(s => s.DatasetId).OnDelete(DeleteBehavior.Cascade);
+
     }
 
 }

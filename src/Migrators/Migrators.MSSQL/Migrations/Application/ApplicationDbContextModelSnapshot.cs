@@ -103,6 +103,50 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.ToTable("UserTokens", "IDENTITY");
                 });
 
+            modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.Attachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tenant")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Attachments", (string)null);
+                });
+
             modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.Brand", b =>
                 {
                     b.Property<Guid>("Id")
@@ -166,6 +210,12 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
@@ -179,10 +229,18 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<int?>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Tenant")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
 
                     b.ToTable("Categories", (string)null);
                 });
@@ -479,6 +537,47 @@ namespace Migrators.MSSQL.Migrations.Application
                         .IsUnique();
 
                     b.ToTable("DatasetFileConfigs", (string)null);
+                });
+
+            modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.DatasetOffice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DatasetId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OfficeCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tenant")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DatasetId");
+
+                    b.ToTable("DatasetOffices", (string)null);
                 });
 
             modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.DataType", b =>
@@ -1050,6 +1149,15 @@ namespace Migrators.MSSQL.Migrations.Application
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.Category", b =>
+                {
+                    b.HasOne("TD.OpenData.WebApi.Domain.Catalog.Category", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.CustomField", b =>
                 {
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.Dataset", "Dataset")
@@ -1137,6 +1245,17 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Navigation("Dataset");
                 });
 
+            modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.DatasetOffice", b =>
+                {
+                    b.HasOne("TD.OpenData.WebApi.Domain.Catalog.Dataset", "Dataset")
+                        .WithMany("DatasetOffices")
+                        .HasForeignKey("DatasetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dataset");
+                });
+
             modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.Metadata", b =>
                 {
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.Dataset", "Dataset")
@@ -1170,6 +1289,8 @@ namespace Migrators.MSSQL.Migrations.Application
 
             modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.Category", b =>
                 {
+                    b.Navigation("Children");
+
                     b.Navigation("Datasets");
                 });
 
@@ -1185,6 +1306,8 @@ namespace Migrators.MSSQL.Migrations.Application
 
                     b.Navigation("DatasetFileConfig")
                         .IsRequired();
+
+                    b.Navigation("DatasetOffices");
 
                     b.Navigation("Metadatas");
                 });

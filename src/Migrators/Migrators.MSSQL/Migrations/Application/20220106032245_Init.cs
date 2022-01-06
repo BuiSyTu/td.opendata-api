@@ -5,12 +5,33 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Migrators.MSSQL.Migrations.Application
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
                 name: "IDENTITY");
+
+            migrationBuilder.CreateTable(
+                name: "Attachments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Tenant = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attachments", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "AuditTrails",
@@ -60,6 +81,10 @@ namespace Migrators.MSSQL.Migrations.Application
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Code = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: true),
+                    ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Tenant = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -71,6 +96,11 @@ namespace Migrators.MSSQL.Migrations.Application
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Categories_Categories_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Categories",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -563,6 +593,32 @@ namespace Migrators.MSSQL.Migrations.Application
                 });
 
             migrationBuilder.CreateTable(
+                name: "DatasetOffices",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DatasetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OfficeCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Tenant = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DatasetOffices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DatasetOffices_Datasets_DatasetId",
+                        column: x => x.DatasetId,
+                        principalTable: "Datasets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Metadatas",
                 columns: table => new
                 {
@@ -594,6 +650,11 @@ namespace Migrators.MSSQL.Migrations.Application
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Categories_ParentId",
+                table: "Categories",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CustomFields_DatasetId",
                 table: "CustomFields",
                 column: "DatasetId");
@@ -615,6 +676,11 @@ namespace Migrators.MSSQL.Migrations.Application
                 table: "DatasetFileConfigs",
                 column: "DatasetId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DatasetOffices_DatasetId",
+                table: "DatasetOffices",
+                column: "DatasetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Datasets_CategoryId",
@@ -701,6 +767,9 @@ namespace Migrators.MSSQL.Migrations.Application
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Attachments");
+
+            migrationBuilder.DropTable(
                 name: "AuditTrails");
 
             migrationBuilder.DropTable(
@@ -714,6 +783,9 @@ namespace Migrators.MSSQL.Migrations.Application
 
             migrationBuilder.DropTable(
                 name: "DatasetFileConfigs");
+
+            migrationBuilder.DropTable(
+                name: "DatasetOffices");
 
             migrationBuilder.DropTable(
                 name: "Metadatas");

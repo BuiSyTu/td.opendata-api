@@ -9,15 +9,12 @@ using TD.OpenData.WebApi.Domain.Catalog;
 
 namespace TD.OpenData.WebApi.Infrastructure.Persistence.Configurations;
 
-internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
+internal class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
 {
-    public void Configure(EntityTypeBuilder<Category> builder)
+    public void Configure(EntityTypeBuilder<Attachment> builder)
     {
-        builder.ToTable("Categories");
+        builder.ToTable("Attachments");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd().HasColumnType("uniqueidentifier");
-        //builder.HasOne(x => x.Parent).WithMany(x => x.Children).HasForeignKey(x => x.ParentId).OnDelete(DeleteBehavior.SetNull);
-        builder.Property(x => x.Name).HasMaxLength(250);
-        builder.Property(x => x.Code).HasMaxLength(250);
     }
 }
