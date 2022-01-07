@@ -18,3 +18,5 @@ dotnet ef migrations add Initial --project .././Migrators/Migrators.MSSQL/ --con
 
 dotnet ef database update --context ApplicationDbContext
 
+
+dotnet ef migrations add Update_1 --project .././Migrators/Migrators.MSSQL/ --context ApplicationDbContext -o Migrations/Application

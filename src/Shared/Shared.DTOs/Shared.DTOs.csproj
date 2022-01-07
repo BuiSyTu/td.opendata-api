@@ -5,9 +5,7 @@
         <AssemblyName>TD.OpenData.WebApi.Shared.DTOs</AssemblyName>
     </PropertyGroup>
     <ItemGroup>
-      <Folder Include="Catalog\Dataset\" />
-    </ItemGroup>
-    <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.13" />
     </ItemGroup>
+
 </Project>
