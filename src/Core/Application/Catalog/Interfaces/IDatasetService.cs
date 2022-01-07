@@ -6,11 +6,11 @@ namespace TD.OpenData.WebApi.Application.Catalog.Interfaces;
 
 public interface IDatasetService : ITransientService
 {
-    Task<Result<CategoryDetailsDto>> GetDetailsAsync(Guid id);
+    Task<Result<MetadataDetailsDto>> GetDetailsAsync(Guid id);
 
-    Task<PaginatedResult<CategoryDto>> SearchAsync(CategoryListFilter filter);
+    Task<PaginatedResult<MetadataDto>> SearchAsync(DatasetListFilter filter);
 
-    Task<Result<Guid>> CreateAsync(CreateCategoryRequest request);
+    Task<Result<Guid>> CreateAsync(CreateDatasetRequest request);
 
     Task<Result<Guid>> UpdateAsync(UpdateCategoryRequest request, Guid id);
 

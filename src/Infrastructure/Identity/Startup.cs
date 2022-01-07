@@ -101,7 +101,7 @@ internal static class Startup
                     ValidateIssuer = false,
                     ValidateLifetime = true,
                     ValidateAudience = false,
-                    RoleClaimType = ClaimTypes.Role,
+                    //RoleClaimType = ClaimTypes.Role,
                     ClockSkew = TimeSpan.Zero
                 };
                 bearer.Events = new JwtBearerEvents

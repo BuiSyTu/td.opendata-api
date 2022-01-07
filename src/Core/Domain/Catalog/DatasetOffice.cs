@@ -9,16 +9,19 @@ public class DatasetOffice : AuditableEntity, IMustHaveTenant
     public Guid? DatasetId { get;  set; }
     public virtual Dataset Dataset { get; set; } = default!;
     public string? OfficeCode { get;  set; }
+    public string? OfficeName { get; set; }
+
     public string? Tenant { get; set; }
 
     public DatasetOffice()
     {
     }
 
-    public DatasetOffice Update(in Guid datasetId, string? officeCode)
+    public DatasetOffice Update(in Guid datasetId, string? officeCode, string? officeName)
     {
         if (datasetId != Guid.Empty && !DatasetId.NullToString().Equals(datasetId)) DatasetId = datasetId;
         if (officeCode != null && !OfficeCode.NullToString().Equals(officeCode)) OfficeCode = officeCode;
+        if (officeName != null && !OfficeName.NullToString().Equals(officeName)) OfficeName = officeName;
         return this;
     }
 }
