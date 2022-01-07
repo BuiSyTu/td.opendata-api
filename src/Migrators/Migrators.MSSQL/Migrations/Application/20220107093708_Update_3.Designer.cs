@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 
@@ -11,9 +12,10 @@ using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 namespace Migrators.MSSQL.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220107093708_Update_3")]
+    partial class Update_3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -302,6 +304,7 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CategoryId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
@@ -315,6 +318,7 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DataTypeId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DeletedBy")
@@ -333,6 +337,7 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("LicenseId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Maintainer")
@@ -349,9 +354,11 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<Guid?>("OrganizationId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ProviderTypeId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Resource")
@@ -1119,27 +1126,32 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.Category", "Category")
                         .WithMany("Datasets")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.DataType", "DataType")
                         .WithMany("Datasets")
                         .HasForeignKey("DataTypeId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.License", "License")
                         .WithMany("Datasets")
                         .HasForeignKey("LicenseId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.Organization", "Organization")
                         .WithMany("Datasets")
                         .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.ProviderType", "ProviderType")
                         .WithMany("Datasets")
                         .HasForeignKey("ProviderTypeId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 
