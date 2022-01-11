@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 
@@ -11,9 +12,10 @@ using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 namespace Migrators.MSSQL.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220110024354_Update_7")]
+    partial class Update_7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -402,9 +404,6 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<string>("Data")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DataKey")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid?>("DatasetId")
                         .IsRequired()
                         .HasColumnType("uniqueidentifier");
@@ -418,6 +417,9 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<string>("Headers")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -425,9 +427,6 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Method")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TableName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tenant")
@@ -483,9 +482,6 @@ namespace Migrators.MSSQL.Migrations.Application
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("TableName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tenant")
                         .HasColumnType("nvarchar(max)");
@@ -1239,11 +1235,14 @@ namespace Migrators.MSSQL.Migrations.Application
                 {
                     b.Navigation("CustomFields");
 
-                    b.Navigation("DatasetAPIConfig");
+                    b.Navigation("DatasetAPIConfig")
+                        .IsRequired();
 
-                    b.Navigation("DatasetDBConfig");
+                    b.Navigation("DatasetDBConfig")
+                        .IsRequired();
 
-                    b.Navigation("DatasetFileConfig");
+                    b.Navigation("DatasetFileConfig")
+                        .IsRequired();
 
                     b.Navigation("DatasetOffices");
                 });

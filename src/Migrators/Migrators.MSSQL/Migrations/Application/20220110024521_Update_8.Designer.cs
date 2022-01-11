@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 
@@ -11,9 +12,10 @@ using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 namespace Migrators.MSSQL.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220110024521_Update_8")]
+    partial class Update_8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -483,9 +485,6 @@ namespace Migrators.MSSQL.Migrations.Application
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("TableName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tenant")
                         .HasColumnType("nvarchar(max)");
@@ -1239,11 +1238,14 @@ namespace Migrators.MSSQL.Migrations.Application
                 {
                     b.Navigation("CustomFields");
 
-                    b.Navigation("DatasetAPIConfig");
+                    b.Navigation("DatasetAPIConfig")
+                        .IsRequired();
 
-                    b.Navigation("DatasetDBConfig");
+                    b.Navigation("DatasetDBConfig")
+                        .IsRequired();
 
-                    b.Navigation("DatasetFileConfig");
+                    b.Navigation("DatasetFileConfig")
+                        .IsRequired();
 
                     b.Navigation("DatasetOffices");
                 });

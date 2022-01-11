@@ -53,27 +53,34 @@ public class DatasetService : IDatasetService
 
         var dataType = await _repository.GetByIdAsync<DataType>((Guid)request.DataTypeId);
 
-        if (string.Equals(dataType.Code, "webapi", StringComparison.OrdinalIgnoreCase) && request.APIConfig != null) {
-            var itemConfig = request.APIConfig.Adapt<DatasetAPIConfig>();
+        if (string.Equals(dataType.Code, "webapi", StringComparison.OrdinalIgnoreCase) && request.DatasetAPIConfig != null) {
+            var itemConfig = request.DatasetAPIConfig.Adapt<DatasetAPIConfig>();
             itemConfig.DatasetId = itemDatasetId;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
         }
-        else if (string.Equals(dataType.Code, "file", StringComparison.OrdinalIgnoreCase) && request.FileConfig != null)
+        else if (string.Equals(dataType.Code, "file", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
         {
-            var itemConfig = request.APIConfig.Adapt<DatasetFileConfig>();
+            var itemConfig = request.DatasetAPIConfig.Adapt<DatasetFileConfig>();
             itemConfig.DatasetId = itemDatasetId;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
         }
-        else if (string.Equals(dataType.Code, "database", StringComparison.OrdinalIgnoreCase) && request.DBConfig != null)
+        else if (string.Equals(dataType.Code, "database", StringComparison.OrdinalIgnoreCase) && request.DatasetDBConfig != null)
         {
-            var itemConfig = request.APIConfig.Adapt<DatasetDBConfig>();
+            var itemConfig = request.DatasetAPIConfig.Adapt<DatasetDBConfig>();
             itemConfig.DatasetId = itemDatasetId;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
         }
         await _repository.SaveChangesAsync();
+
+        string jobId = _jobService.Enqueue<IDatasetJob>(x => x.DatasetWebAPIAsync(itemDatasetId));
+
+
+
+   
+
         return await Result<Guid>.SuccessAsync(itemDatasetId);
     }
 
@@ -87,7 +94,9 @@ public class DatasetService : IDatasetService
 
     public async Task<Result<DatasetDetailsDto>> GetDetailsAsync(Guid id)
     {
-        var includes = new Expression<Func<Dataset, object>>[] { x => x.Category, y => y.DataType, z => z.Organization, x => x.License, x => x.ProviderType };
+#pragma warning disable CS8603 // Possible null reference return.
+        var includes = new Expression<Func<Dataset, object>>[] { x => x.Category, y => y.DataType, z => z.Organization, x => x.License, x => x.ProviderType, x => x.DatasetAPIConfig, x => x.DatasetDBConfig, x => x.DatasetFileConfig };
+#pragma warning restore CS8603 // Possible null reference return.
         var item = await _repository.GetByIdAsync<Dataset, DatasetDetailsDto>(id, includes);
         return await Result<DatasetDetailsDto>.SuccessAsync(item);
     }

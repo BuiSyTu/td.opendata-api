@@ -28,7 +28,8 @@ public class DatasetDetailsDto : IDto
     public Guid? ProviderTypeId { get; set; }
     public ProviderTypeDto? ProviderType { get; set; }
 
-
-
+    public virtual DatasetAPIConfigDto? DatasetAPIConfig { get; set; } = default!;
+    public virtual DatasetDBConfigDto? DatasetDBConfig { get; set; } = default!;
+    public virtual DatasetFileConfigDto? DatasetFileConfig { get; set; } = default!;
 
 }

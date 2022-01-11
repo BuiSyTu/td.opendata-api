@@ -54,9 +54,9 @@ public class Dataset : AuditableEntity, IMustHaveTenant
 
     public virtual ICollection<DatasetOffice> DatasetOffices { get; set; } = new List<DatasetOffice>();
     public virtual ICollection<CustomField> CustomFields { get; set; } = new List<CustomField>();
-    public virtual DatasetAPIConfig DatasetAPIConfig { get; set; } = default!;
-    public virtual DatasetFileConfig DatasetFileConfig { get; set; } = default!;
-    public virtual DatasetDBConfig DatasetDBConfig { get; set; } = default!;
+    public virtual DatasetAPIConfig? DatasetAPIConfig { get; set; } = default!;
+    public virtual DatasetFileConfig? DatasetFileConfig { get; set; } = default!;
+    public virtual DatasetDBConfig? DatasetDBConfig { get; set; } = default!;
 
 
     public string? Tenant { get; set; }
