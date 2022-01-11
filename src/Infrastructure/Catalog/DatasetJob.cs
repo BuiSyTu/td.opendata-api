@@ -13,6 +13,8 @@ using TD.OpenData.WebApi.Application.Common.Exceptions;
 using Microsoft.Extensions.Localization;
 using RestSharp;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 
 namespace TD.OpenData.WebApi.Infrastructure.Catalog;
 
@@ -104,64 +106,101 @@ public class DatasetJob : IDatasetJob
     {
         await Notify("Dữ liệu bắt đầu được đồng bộ");
 
-        var dataset = await _repository.GetByIdAsync<Dataset>(idDataset);
-        if (dataset == null)
+        try
         {
-            await Notify("Lỗi, dữ liệu chưa được đồng bộ!");
-            throw new EntityNotFoundException(string.Format(_localizer["dataset.notfound"], idDataset));
+            var dataset = await _repository.GetByIdAsync<Dataset>(idDataset);
+            if (dataset == null)
+            {
+                await Notify("Lỗi, dữ liệu chưa được đồng bộ!");
+                throw new EntityNotFoundException(string.Format(_localizer["dataset.notfound"], idDataset));
+            }
+
+            var datasetAPIConfigs = await _repository.GetListAsync<DatasetAPIConfig>(x => x.DatasetId == idDataset);
+            var datasetAPIConfig = datasetAPIConfigs.FirstOrDefault();
+
+
+            var metadata = dataset.Metadata;
+            if (string.IsNullOrWhiteSpace(metadata))
+            {
+                await Notify("Lỗi, dữ liệu chưa được đồng bộ!");
+                throw new EntityNotFoundException(string.Format(_localizer["metadata.notfound"], idDataset));
+            }
+
+            List<MetadataDto> listMetadatas = JsonConvert.DeserializeObject<List<MetadataDto>>(metadata);
+
+            var sql = $"CREATE TABLE [{datasetAPIConfig.TableName}-{idDataset}] ([DocId] uniqueidentifier NOT NULL";
+            foreach (var metadataitem in listMetadatas)
+            {
+                if (string.Equals(metadataitem.DataType, "string", StringComparison.OrdinalIgnoreCase))
+                {
+                    sql += $",[{metadataitem.Data}] nvarchar(max) NULL";
+                }
+                else if (string.Equals(metadataitem.DataType, "datetime", StringComparison.OrdinalIgnoreCase))
+                {
+                    sql += $",[{metadataitem.Data}] datetime2 NULL";
+                }
+                else if (string.Equals(metadataitem.DataType, "boolean", StringComparison.OrdinalIgnoreCase))
+                {
+                    sql += $",[{metadataitem.Data}] bit NULL";
+                }
+                else if (string.Equals(metadataitem.DataType, "int", StringComparison.OrdinalIgnoreCase))
+                {
+                    sql += $",[{metadataitem.Data}] int NULL";
+                }
+                else if (string.Equals(metadataitem.DataType, "decimal", StringComparison.OrdinalIgnoreCase))
+                {
+                    sql += $",[{metadataitem.Data}] DECIMAL(10,4) NULL";
+                }
+            }
+
+            sql += ");";
+           // await _repository.ExecuteAsync(sql);
+
+            var client = new RestClient();
+            var request_ = new RestRequest(datasetAPIConfig.Url, string.Equals(datasetAPIConfig.Method, "post", StringComparison.OrdinalIgnoreCase) ? Method.Post :
+                Method.Get);
+
+            var headers = _serializerService.Deserialize<Dictionary<string, string>>(datasetAPIConfig.Headers);
+
+            foreach (string? k in headers.Keys)
+            {
+                string? value = headers[k];
+                request_.AddHeader(k, value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(datasetAPIConfig.Data))
+            {
+                request_.AddParameter("application/json", datasetAPIConfig.Data, ParameterType.RequestBody);
+            }
+
+            var cancellationTokenSource = new CancellationTokenSource();
+            var restResponse = await client.ExecuteAsync(request_, cancellationTokenSource.Token);
+
+            string? content = restResponse.Content;
+            dynamic contentObj = JObject.Parse(content);
+
+            dynamic data = _serializerService.Deserialize<object>(contentObj);
+
+
+           /* List<dynamic> result = contentObj[datasetAPIConfig.DataKey];
+
+            foreach (dynamic item in result)
+            {
+                var itemdefail = _serializerService.Deserialize<Dictionary<string, string>>(dynamic);
+
+
+            }*/
+
+
+            await _eventService.PublishAsync(new StatsChangedEvent());
+            await Notify("Dữ liệu đồng bộ xong!");
+
         }
-
-        var datasetAPIConfigs = await _repository.GetListAsync<DatasetAPIConfig>(x => x.DatasetId == idDataset);
-        var datasetAPIConfig = datasetAPIConfigs.FirstOrDefault();
-
-
-        var metadata = dataset.Metadata;
-        if (string.IsNullOrWhiteSpace(metadata))
+        catch (Exception ex)
         {
-            await Notify("Lỗi, dữ liệu chưa được đồng bộ!");
-            throw new EntityNotFoundException(string.Format(_localizer["metadata.notfound"], idDataset));
+            await Notify("Dữ liệu đồng bộ lỗi!");
+            throw new Exception(string.Format(_localizer["dataset.notfound"], ex.Message));
         }
-
-        var client = new RestClient();
-        var request_ = new RestRequest(datasetAPIConfig.Url, string.Equals(datasetAPIConfig.Method, "post", StringComparison.OrdinalIgnoreCase) ? Method.Post :
-            Method.Get);
-
-        var headers = _serializerService.Deserialize<Dictionary<string, string>>(datasetAPIConfig.Headers);
-
-        var keys = headers.Keys;
-        foreach (var k in keys)
-        {
-            var value = headers[k];
-            request_.AddHeader(k, value);
-        }
-
-        if (!string.IsNullOrWhiteSpace(datasetAPIConfig.Data))
-        {
-            request_.AddParameter("application/json", datasetAPIConfig.Data, ParameterType.RequestBody);
-        }
-
-        var cancellationTokenSource = new CancellationTokenSource();
-        var restResponse = await client.ExecuteAsync(request_, cancellationTokenSource.Token);
-
-        var content = restResponse.Content;
-        dynamic contentObj = JObject.Parse(content);
-        dynamic result = contentObj[datasetAPIConfig.DataKey];
-
-
-
-
-        //var product = await _repository.QueryFirstOrDefaultAsync<Object>($"SELECT * FROM public.\"Products\" WHERE \"Id\"  = '{id}' AND \"Tenant\"='@tenant'");
-
-
-        var sql = $"CREATE TABLE [{idDataset}] ([DocId] uniqueidentifier NOT NULL,[Name] nvarchar(max) NOT NULL);";
-
-        var product = await _repository.ExecuteAsync(sql);
-
-
-
-
-        await _eventService.PublishAsync(new StatsChangedEvent());
-        await Notify("Dữ liệu đồng bộ xong!");
 
     }
 

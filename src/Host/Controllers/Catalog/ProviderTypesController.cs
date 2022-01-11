@@ -18,6 +18,13 @@ public class ProviderTypesController : BaseController
         _service = service;
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<Result<ProviderTypeDetailsDto>>> GetAsync(Guid id)
+    {
+        var product = await _service.GetDetailsAsync(id);
+        return Ok(product);
+    }
+
     [HttpPost("search")]
     [OpenApiOperation("Search ProviderTypes using available Filters.", "")]
     public async Task<ActionResult<PaginatedResult<ProviderTypeDto>>> SearchAsync(ProviderTypeListFilter filter)

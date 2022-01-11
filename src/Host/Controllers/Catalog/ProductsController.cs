@@ -18,7 +18,6 @@ public class ProductsController : BaseController
     }
 
     [HttpGet("{id:guid}")]
-    [MustHavePermission(PermissionConstants.Products.View)]
     public async Task<ActionResult<Result<ProductDetailsDto>>> GetAsync(Guid id)
     {
         var product = await _service.GetProductDetailsAsync(id);

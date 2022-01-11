@@ -16,7 +16,7 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.ToTable("Categories");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd().HasColumnType("uniqueidentifier");
-        //builder.HasOne(x => x.Parent).WithMany(x => x.Children).HasForeignKey(x => x.ParentId).OnDelete(DeleteBehavior.SetNull);
+        builder.HasOne(x => x.Parent).WithMany(x => x.Children).HasForeignKey(x => x.ParentId);
         builder.Property(x => x.Name).HasMaxLength(250);
         builder.Property(x => x.Code).HasMaxLength(250);
     }

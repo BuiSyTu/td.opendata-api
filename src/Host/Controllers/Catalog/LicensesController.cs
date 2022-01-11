@@ -18,6 +18,14 @@ public class LicensesController : BaseController
         _service = service;
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<Result<LicenseDetailsDto>>> GetAsync(Guid id)
+    {
+        var product = await _service.GetDetailsAsync(id);
+        return Ok(product);
+    }
+
+
     [HttpPost("search")]
     [OpenApiOperation("Search Licenses using available Filters.", "")]
     public async Task<ActionResult<PaginatedResult<LicenseDto>>> SearchAsync(LicenseListFilter filter)
