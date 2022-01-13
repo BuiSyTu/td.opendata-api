@@ -15,6 +15,11 @@ using RestSharp;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
+using Dapper;
+using System.Data;
+using System;
+using System.ComponentModel;
+using System.Collections;
 
 namespace TD.OpenData.WebApi.Infrastructure.Catalog;
 
@@ -154,19 +159,26 @@ public class DatasetJob : IDatasetJob
             }
 
             sql += ");";
-           // await _repository.ExecuteAsync(sql);
+             //await _repository.ExecuteAsync(sql);
 
             var client = new RestClient();
             var request_ = new RestRequest(datasetAPIConfig.Url, string.Equals(datasetAPIConfig.Method, "post", StringComparison.OrdinalIgnoreCase) ? Method.Post :
                 Method.Get);
 
-            var headers = _serializerService.Deserialize<Dictionary<string, string>>(datasetAPIConfig.Headers);
-
-            foreach (string? k in headers.Keys)
+            try
             {
-                string? value = headers[k];
-                request_.AddHeader(k, value);
+                var headers = _serializerService.Deserialize<Dictionary<string, string>>(datasetAPIConfig.Headers);
+
+                foreach (string? k in headers.Keys)
+                {
+                    string? value = headers[k];
+                    request_.AddHeader(k, value);
+                }
+            } catch (Exception ex)
+            {
+
             }
+            
 
             if (!string.IsNullOrWhiteSpace(datasetAPIConfig.Data))
             {
@@ -179,20 +191,110 @@ public class DatasetJob : IDatasetJob
             string? content = restResponse.Content;
             dynamic contentObj = JObject.Parse(content);
 
-            dynamic data = _serializerService.Deserialize<object>(contentObj);
+            //dynamic data = _serializerService.Deserialize<object>(contentObj);
 
 
-           /* List<dynamic> result = contentObj[datasetAPIConfig.DataKey];
+            dynamic result = contentObj[datasetAPIConfig.DataKey];
 
-            foreach (dynamic item in result)
+
+
+
+
+            /*
+                        var dynamicParameters = new DynamicParameters();
+                        var selects = new List<string>();
+                        for (var i = 0; i < members.Length; i++)
+                        {
+                            var member = members[i];
+                            var pUsername = $"u{i}";
+                            var pIsActive = $"a{i}";
+                            dynamicParameters.Add(pUsername, member.Username);
+                            dynamicParameters.Add(pIsActive, member.IsActive);
+                            selects.Add("select @{pUsername},@{pIsActive}");
+                        }
+                        con.Execute($"insert into Member(Username, IsActive){string.Join(" union all ", selects)}", dynamicParameters);*/
+
+
+
+            var count = result.Count;
+            if (count < 1)
             {
-                var itemdefail = _serializerService.Deserialize<Dictionary<string, string>>(dynamic);
+                throw new Exception(string.Format(_localizer["dataset.notfound"], idDataset));
+            }
+
+           var insertSql = $"INSERT INTO [{datasetAPIConfig.TableName}-{idDataset}] ([Docid],{string.Join(", ", listMetadatas.Select(e => $"[{e.Data}]"))}) VALUES  (@Docid, {string.Join(", ", listMetadatas.Select(e => $"@{e.Data}"))})";
+
+            //var insertSql = $"INSERT INTO {datasetAPIConfig.TableName}-{idDataset} ([Docid], {string.Join(", ", listMetadatas.Select(e => $"[{e.Data}]"))}) VALUES ";
+
+            var sqlToExecute = new List<Tuple<string, DynamicParameters>>();
 
 
-            }*/
 
 
-            await _eventService.PublishAsync(new StatsChangedEvent());
+            foreach (dynamic itemResult in result)
+            {
+
+
+                /* foreach (var metadataitem in listMetadatas)
+                 {
+                     try
+                     {
+                         var tmpp = string.Equals(metadataitem.DataType, "string", StringComparison.OrdinalIgnoreCase) ? Convert.ToString(itemResult[metadataitem.Data])
+                            : string.Equals(metadataitem.DataType, "datetime", StringComparison.OrdinalIgnoreCase) ? Convert.ToDateTime(itemResult[metadataitem.Data])
+                            : string.Equals(metadataitem.DataType, "boolean", StringComparison.OrdinalIgnoreCase) ? Convert.ToBoolean(itemResult[metadataitem.Data])
+                            : string.Equals(metadataitem.DataType, "int", StringComparison.OrdinalIgnoreCase) ? Convert.ToInt32(itemResult[metadataitem.Data])
+                            : string.Equals(metadataitem.DataType, "decimal", StringComparison.OrdinalIgnoreCase) ? Convert.ToDecimal(itemResult[metadataitem.Data])
+                            : string.Empty;
+                     }
+                     catch (Exception e)
+                     {
+
+                     }
+                 }*/
+
+                var p = new DynamicParameters();
+                p.Add("@Docid", Guid.NewGuid());
+                p.Add("@id", "123");
+                p.Add("@rank", "Nguyễn Tùng Lâm");
+                p.Add("@title", "123");
+                p.Add("@fullTitle", "Các doanh nghiệp có liên quan đến Tân Hoàng Minh vay trái phiếu khoảng 14.320 tỷ đồng trong cả năm 2021, dù trái phiếu bất động sản bị siết chặt.");
+                p.Add("@year", "11111");
+                p.Add("@image", "123");
+                p.Add("@crew", "123");
+                p.Add("@imDbRating", "123");
+                p.Add("@imDbRatingCount", "123");
+
+                /* var tmpsql = $"({string.Join(", ", "N'" + listMetadatas.Select(metadataitem => string.Equals(metadataitem.DataType, "string", StringComparison.OrdinalIgnoreCase) ? Convert.ToString(itemResult[metadataitem.Data]) : string.Equals(metadataitem.DataType, "datetime", StringComparison.OrdinalIgnoreCase) ? Convert.ToDateTime(itemResult[metadataitem.Data]) : string.Equals(metadataitem.DataType, "boolean", StringComparison.OrdinalIgnoreCase) ? Convert.ToBoolean(itemResult[metadataitem.Data]) : string.Equals(metadataitem.DataType, "int", StringComparison.OrdinalIgnoreCase) ? Convert.ToInt32(itemResult[metadataitem.Data]) : string.Equals(metadataitem.DataType, "decimal", StringComparison.OrdinalIgnoreCase) ? Convert.ToDecimal(itemResult[metadataitem.Data]) : string.Empty) + "'" )})";*/
+
+                //var tmpsql = $"(N)";
+                //var valueSql = GetQueries(dataToInsert, dataFunc);
+
+                //sqlToExecute.Add(Tuple.Create($"{insertSql} {tmpsql}"));
+
+                try
+                {
+                   // var sqltmp = $"{insertSql} {tmpsql}";
+                    await _repository.ExecuteAsync(insertSql, p);
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+
+            }
+            /* 
+             foreach (dynamic item in result)
+             {
+                 var itemdefail = _serializerService.Deserialize<Dictionary<string, string>>(dynamic);
+
+
+             }*/
+            
+
+
+         await _eventService.PublishAsync(new StatsChangedEvent());
             await Notify("Dữ liệu đồng bộ xong!");
 
         }
@@ -202,6 +304,42 @@ public class DatasetJob : IDatasetJob
             throw new Exception(string.Format(_localizer["dataset.notfound"], ex.Message));
         }
 
+    }
+
+    public DataTable ToDataTable<T>(dynamic items)
+    {
+
+        DataTable dtDataTable = new DataTable();
+        if (items.Count == 0) return dtDataTable;
+
+        ((IEnumerable)items[0]).Cast<dynamic>().Select(p => p.Name).ToList().ForEach(col => { dtDataTable.Columns.Add(col); });
+
+        ((IEnumerable)items).Cast<dynamic>().ToList().
+            ForEach(data =>
+            {
+                DataRow dr = dtDataTable.NewRow();
+                ((IEnumerable)data).Cast<dynamic>().ToList().ForEach(Col => { dr[Col.Name] = Col.Value; });
+                dtDataTable.Rows.Add(dr);
+            });
+        return dtDataTable;
+    }
+
+
+    public DataTable ConvertToDataTable<T>(IList<T> data)
+    {
+        PropertyDescriptorCollection properties =
+           TypeDescriptor.GetProperties(typeof(T));
+        DataTable table = new DataTable();
+        foreach (PropertyDescriptor prop in properties)
+            table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+        foreach (T item in data)
+        {
+            DataRow row = table.NewRow();
+            foreach (PropertyDescriptor prop in properties)
+                row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+            table.Rows.Add(row);
+        }
+        return table;
     }
 
     public Task DatasetDatabaseAsync(Guid idDataset)

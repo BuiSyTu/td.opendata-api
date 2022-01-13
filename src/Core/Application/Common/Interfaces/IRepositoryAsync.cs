@@ -315,5 +315,6 @@ public interface IRepositoryAsync : ITransientService
     where T : BaseEntity;
 
     Task<int> ExecuteAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default);
-   
+
+
 }
