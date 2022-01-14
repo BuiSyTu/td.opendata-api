@@ -35,9 +35,23 @@
           "formatter": "Serilog.Formatting.Json.JsonFormatter, Serilog",
           "rollingInterval": "Day",
           "restrictedToMinimumLevel": "Information",
-          "retainedFileCountLimit": 5
+          "retainedFileCountLimit": 5 // luu nhat ky trong 5 ngay moi nhat
         },
         "Name": "File"
+      },
+      {
+        "Name": "MSSqlServer",
+        "Args": {
+          "connectionString": "Server=192.168.2.29; Database=OpenDataWebAPILogs;User Id=sa; Password=11091991; Trusted_Connection=False; MultipleActiveResultSets=true;",
+          "sinkOptionsSection": {
+            "tableName": "Logs",
+            "schemaName": "EventLogging",
+            "autoCreateSqlTable": true,
+            "batchPostingLimit": 1000,
+            "period": "0.00:00:30"
+          },
+          "restrictedToMinimumLevel": "Information"
+        }
       },
       {
         "Name": "Seq",
