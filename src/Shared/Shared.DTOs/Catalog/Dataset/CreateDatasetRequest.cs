@@ -15,12 +15,12 @@ public class CreateDatasetRequest : IMustBeValid
     public string? MaintainerEmail { get; set; }
     public Guid? OrganizationId { get; set; }
     public string? Resource { get; set; }
+    public string? Metadata { get; set; }
     public Guid? DataTypeId { get; set; }
     public Guid? CategoryId { get; set; }
     public Guid? ProviderTypeId { get; set; }
 
-    public CreateDatasetAPIConfigRequest? APIConfig { get; set; }
-    public CreateDatasetDBConfigRequest? DBConfig { get; set; }
-    public CreateDatasetFileConfigRequest? FileConfig { get; set; }
-    public List<CreateMetadataRequest>? Metadata { get; set; }
+    public CreateDatasetAPIConfigRequest? DatasetAPIConfig { get; set; }
+    public CreateDatasetDBConfigRequest? DatasetDBConfig { get; set; }
+    public CreateDatasetFileConfigRequest? DatasetFileConfig { get; set; }
 }

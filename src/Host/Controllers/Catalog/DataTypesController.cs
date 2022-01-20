@@ -18,6 +18,13 @@ public class DataTypesController : BaseController
         _service = service;
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<Result<DataTypeDetailsDto>>> GetAsync(Guid id)
+    {
+        var product = await _service.GetDetailsAsync(id);
+        return Ok(product);
+    }
+
     [HttpPost("search")]
     [OpenApiOperation("Search DataTypes using available Filters.", "")]
     public async Task<ActionResult<PaginatedResult<DataTypeDto>>> SearchAsync(DataTypeListFilter filter)

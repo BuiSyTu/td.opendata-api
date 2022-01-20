@@ -18,6 +18,13 @@ public class OrganizationsController : BaseController
         _service = service;
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<Result<OrganizationDetailsDto>>> GetAsync(Guid id)
+    {
+        var product = await _service.GetDetailsAsync(id);
+        return Ok(product);
+    }
+
     [HttpPost("search")]
     [OpenApiOperation("Search Organizations using available Filters.", "")]
     public async Task<ActionResult<PaginatedResult<OrganizationDto>>> SearchAsync(OrganizationListFilter filter)

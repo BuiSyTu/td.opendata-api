@@ -6,4 +6,5 @@ public class CreateDatasetDBConfigRequest : IMustBeValid
     public string? ConnectionString { get; set; }
     public string? DatabaseName { get; set; }
     public string? DataTable { get; set; }
+    public string? TableName { get; set; }
 }

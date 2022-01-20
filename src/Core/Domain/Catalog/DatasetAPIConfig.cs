@@ -10,6 +10,8 @@ public class DatasetAPIConfig : AuditableEntity, IMustHaveTenant
     public string? Url { get;  set; }
     public string? Headers { get; set; }
     public string? Data { get;  set; }
+    public string? DataKey { get; set; }
+    public string? TableName { get; set; }
     public Guid? DatasetId { get; set; }
     public virtual Dataset Dataset { get; set; } = default!;
 

@@ -33,7 +33,6 @@ public class ApplicationDbContext : BaseDbContext
     public DbSet<DatasetFileConfig> DatasetFileConfigs => Set<DatasetFileConfig>();
     public DbSet<DataType> DataTypes => Set<DataType>();
     public DbSet<License> Licenses => Set<License>();
-    public DbSet<Metadata> Metadatas => Set<Metadata>();
     public DbSet<Organization> Organizations => Set<Organization>();
     public DbSet<ProviderType> ProviderTypes => Set<ProviderType>();
     public DbSet<Tag> Tags => Set<Tag>();
@@ -106,8 +105,6 @@ public class ApplicationDbContext : BaseDbContext
         builder.ApplyConfiguration(new DataTypeConfiguration());
 
         builder.ApplyConfiguration(new LicenseConfiguration());
-
-        builder.ApplyConfiguration(new MetadataConfiguration());
 
         builder.ApplyConfiguration(new OrganizationConfiguration());
 

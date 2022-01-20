@@ -10,6 +10,7 @@ using Microsoft.Extensions.Localization;
 using Mapster;
 using TD.OpenData.WebApi.Application.FileStorage;
 using TD.OpenData.WebApi.Domain.Common;
+using System.Linq.Expressions;
 
 namespace TD.OpenData.WebApi.Application.Catalog.Services;
 
@@ -61,7 +62,10 @@ public class CategoryService : ICategoryService
 
     public async Task<Result<CategoryDetailsDto>> GetDetailsAsync(Guid id)
     {
-        var item = await _repository.GetByIdAsync<Category, CategoryDetailsDto>(id);
+#pragma warning disable CS8603 // Possible null reference return.
+        var includes = new Expression<Func<Category, object>>[] { x => x.Parent };
+#pragma warning restore CS8603 // Possible null reference return.
+        var item = await _repository.GetByIdAsync<Category, CategoryDetailsDto>(id, includes);
         return await Result<CategoryDetailsDto>.SuccessAsync(item);
     }
 

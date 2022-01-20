@@ -20,3 +20,11 @@ dotnet ef database update --context ApplicationDbContext
 
 
 dotnet ef migrations add Update_1 --project .././Migrators/Migrators.MSSQL/ --context ApplicationDbContext -o Migrations/Application
+
+dotnet ef migrations script --context ApplicationDbContext -o ./script.sql
+
+number
+string
+datetime
+boolean
+decimal

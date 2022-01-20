@@ -18,6 +18,14 @@ public class CategoriesController : BaseController
         _service = service;
     }
 
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<Result<CategoryDetailsDto>>> GetAsync(Guid id)
+    {
+        var product = await _service.GetDetailsAsync(id);
+        return Ok(product);
+    }
+
     [HttpPost("search")]
     [OpenApiOperation("Search Categorys using available Filters.", "")]
     public async Task<ActionResult<PaginatedResult<CategoryDto>>> SearchAsync(CategoryListFilter filter)

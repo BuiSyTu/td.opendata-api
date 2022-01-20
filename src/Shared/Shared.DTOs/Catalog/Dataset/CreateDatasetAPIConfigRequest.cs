@@ -6,4 +6,6 @@ public class CreateDatasetAPIConfigRequest : IMustBeValid
     public string? Url { get; set; }
     public string? Headers { get; set; }
     public string? Data { get; set; }
+    public string? DataKey { get; set; }
+    public string? TableName { get; set; }
 }

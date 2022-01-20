@@ -302,7 +302,6 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CategoryId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
@@ -316,7 +315,6 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DataTypeId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DeletedBy")
@@ -326,7 +324,7 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -335,7 +333,6 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("LicenseId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Maintainer")
@@ -344,16 +341,17 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<string>("MaintainerEmail")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Metadata")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<Guid?>("OrganizationId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ProviderTypeId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Resource")
@@ -404,6 +402,9 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<string>("Data")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DataKey")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("DatasetId")
                         .IsRequired()
                         .HasColumnType("uniqueidentifier");
@@ -424,6 +425,9 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Method")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TableName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tenant")
@@ -480,6 +484,9 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("TableName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Tenant")
                         .HasColumnType("nvarchar(max)");
 
@@ -528,6 +535,9 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("TableName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Tenant")
                         .HasColumnType("nvarchar(max)");
 
@@ -568,6 +578,9 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OfficeCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OfficeName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tenant")
@@ -668,59 +681,6 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.HasKey("Id");
 
                     b.ToTable("Licenses", (string)null);
-                });
-
-            modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.Metadata", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Data")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DataType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("DatasetId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsDisplay")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Tenant")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DatasetId");
-
-                    b.ToTable("Metadatas", (string)null);
                 });
 
             modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.Organization", b =>
@@ -1171,32 +1131,27 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.Category", "Category")
                         .WithMany("Datasets")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.DataType", "DataType")
                         .WithMany("Datasets")
                         .HasForeignKey("DataTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.License", "License")
                         .WithMany("Datasets")
                         .HasForeignKey("LicenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.Organization", "Organization")
                         .WithMany("Datasets")
                         .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.ProviderType", "ProviderType")
                         .WithMany("Datasets")
                         .HasForeignKey("ProviderTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
 
@@ -1253,17 +1208,6 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Navigation("Dataset");
                 });
 
-            modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.Metadata", b =>
-                {
-                    b.HasOne("TD.OpenData.WebApi.Domain.Catalog.Dataset", "Dataset")
-                        .WithMany("Metadatas")
-                        .HasForeignKey("DatasetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Dataset");
-                });
-
             modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.Product", b =>
                 {
                     b.HasOne("TD.OpenData.WebApi.Domain.Catalog.Brand", "Brand")
@@ -1295,18 +1239,13 @@ namespace Migrators.MSSQL.Migrations.Application
                 {
                     b.Navigation("CustomFields");
 
-                    b.Navigation("DatasetAPIConfig")
-                        .IsRequired();
+                    b.Navigation("DatasetAPIConfig");
 
-                    b.Navigation("DatasetDBConfig")
-                        .IsRequired();
+                    b.Navigation("DatasetDBConfig");
 
-                    b.Navigation("DatasetFileConfig")
-                        .IsRequired();
+                    b.Navigation("DatasetFileConfig");
 
                     b.Navigation("DatasetOffices");
-
-                    b.Navigation("Metadatas");
                 });
 
             modelBuilder.Entity("TD.OpenData.WebApi.Domain.Catalog.DataType", b =>
