@@ -18,8 +18,15 @@ public class ProviderTypesController : BaseController
         _service = service;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<Result<ProviderTypeDetailsDto>>> GetAsync([FromQuery] ProviderTypeListFilter filter)
+    {
+        var items = await _service.SearchAsync(filter);
+        return Ok(items);
+    }
+
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Result<ProviderTypeDetailsDto>>> GetAsync(Guid id)
+    public async Task<ActionResult<Result<ProviderTypeDetailsDto>>> GetByIdAsync(Guid id)
     {
         var product = await _service.GetDetailsAsync(id);
         return Ok(product);

@@ -12,9 +12,9 @@
     "Host": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": false,
+      "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://192.168.2.167:5001;http://192.168.2.167:5000",
+      "applicationUrl": "https://192.168.2.169:5001;http://192.168.2.169:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

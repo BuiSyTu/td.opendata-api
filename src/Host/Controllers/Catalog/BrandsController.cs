@@ -18,6 +18,13 @@ public class BrandsController : BaseController
         _service = service;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<PaginatedResult<BrandDto>>> GetAsybc([FromQuery] BrandListFilter filter)
+    {
+        var brands = await _service.SearchAsync(filter);
+        return Ok(brands);
+    }
+
     [HttpPost("search")]
     [OpenApiOperation("Search Brands using available Filters.", "")]
     public async Task<ActionResult<PaginatedResult<BrandDto>>> SearchAsync(BrandListFilter filter)

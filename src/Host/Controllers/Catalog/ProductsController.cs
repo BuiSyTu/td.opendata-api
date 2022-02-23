@@ -17,8 +17,15 @@ public class ProductsController : BaseController
         _service = service;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<Result<ProductDetailsDto>>> GetAsync([FromQuery] ProductListFilter filter)
+    {
+        var products = await _service.SearchAsync(filter);
+        return Ok(products);
+    }
+
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Result<ProductDetailsDto>>> GetAsync(Guid id)
+    public async Task<ActionResult<Result<ProductDetailsDto>>> GetByIdAsync(Guid id)
     {
         var product = await _service.GetProductDetailsAsync(id);
         return Ok(product);

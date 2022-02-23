@@ -18,6 +18,13 @@ public class TagsController : BaseController
         _service = service;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<PaginatedResult<TagDto>>> GetAsync([FromQuery]TagListFilter filter)
+    {
+        var items = await _service.SearchAsync(filter);
+        return Ok(items);
+    }
+
     [HttpPost("search")]
     [OpenApiOperation("Search Tags using available Filters.", "")]
     public async Task<ActionResult<PaginatedResult<TagDto>>> SearchAsync(TagListFilter filter)

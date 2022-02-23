@@ -18,8 +18,15 @@ public class DatasetsController : BaseController
         _service = service;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<PaginatedResult<DatasetDto>>> GetAsync([FromQuery] DatasetListFilter filter)
+    {
+        var items = await _service.SearchAsync(filter);
+        return Ok(items);
+    }
+
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Result<DatasetDetailsDto>>> GetAsync(Guid id)
+    public async Task<ActionResult<Result<DatasetDetailsDto>>> GetByIdAsync(Guid id)
     {
         var product = await _service.GetDetailsAsync(id);
         return Ok(product);

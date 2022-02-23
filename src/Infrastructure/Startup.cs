@@ -58,7 +58,7 @@ public static class Startup
             .UseLocalization(config)
             .UseRouting()
             .UseCorsPolicy()
-            .UseAuthentication()
+            // .UseAuthentication()
             .UseCurrentUser()
             .UseCurrentTenant()
             .UseAuthorization()
@@ -66,7 +66,7 @@ public static class Startup
             .UseHangfireDashboard(config)
             .UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers().RequireAuthorization();
+                endpoints.MapControllers();//.RequireAuthorization();
                 endpoints.MapHealthCheck();
                 endpoints.MapNotifications();
             })

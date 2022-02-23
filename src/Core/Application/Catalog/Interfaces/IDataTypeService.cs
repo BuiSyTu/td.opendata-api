@@ -8,7 +8,6 @@ public interface IDataTypeService : ITransientService
 {
     Task<Result<DataTypeDetailsDto>> GetDetailsAsync(Guid id);
 
-
     Task<PaginatedResult<DataTypeDto>> SearchAsync(DataTypeListFilter filter);
 
     Task<Result<Guid>> CreateAsync(CreateDataTypeRequest request);

@@ -18,8 +18,15 @@ public class OrganizationsController : BaseController
         _service = service;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<Result<OrganizationDetailsDto>>> GetAsync([FromQuery] OrganizationListFilter filter)
+    {
+        var items = await _service.SearchAsync(filter);
+        return Ok(items);
+    }
+
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Result<OrganizationDetailsDto>>> GetAsync(Guid id)
+    public async Task<ActionResult<Result<OrganizationDetailsDto>>> GetByIdAsync(Guid id)
     {
         var product = await _service.GetDetailsAsync(id);
         return Ok(product);
