@@ -6,49 +6,65 @@ namespace TD.OpenData.WebApi.Domain.Catalog;
 
 public class Dataset : AuditableEntity, IMustHaveTenant
 {
-    //Tên dữ liệu
+    // Tên dữ liệu
     public string? Name { get;  set; }
-    //Tiêu dề dữ liệu
+
+    // Tiêu dề dữ liệu
     public string? Title { get; set; }
-    //Mô tả
+
+    // Mô tả
     public string? Description { get;  set; }
-    //Mã dữ liệu
+
+    // Mã dữ liệu
     public string? Code { get; set; }
-    //Từ khóa dữ liệu
+
+    // Từ khóa dữ liệu
     public string? Tags { get; set; }
-    //Trạng thái của dữ liệu
-    //0 = chưa duyệt
-    //1 = đã duyệt
-    //2 = bị từ chối
+
+    // Trạng thái của dữ liệu
+    // 0 = chưa duyệt
+    // 1 = đã duyệt
+    // 2 = bị từ chối
     public int? State { get;  set; }
-    //Public ra cổng của công dân hay không
-    //True: public
-    //False: private
+
+    // Public ra cổng của công dân hay không
+    // True: public
+    // False: private
     public bool? Visibility { get; set; }
-    //Giấy phép
+
+    // Giấy phép
     public Guid? LicenseId { get; set; }
     public virtual License License { get; set; } = default!;
-    //Tác giả
+
+    // Tác giả
     public string? Author { get; set; }
-    //Email của tác giả
+
+    // Email của tác giả
     public string? AuthorEmail { get; set; }
-    //Người bảo trì
+
+    // Người bảo trì
     public string? Maintainer { get; set; }
-    //Email người bảo trì
+
+    // Email người bảo trì
     public string? MaintainerEmail { get; set; }
-    //Đơn vị tạo dữ liệu
+
+    // Đơn vị tạo dữ liệu
     public Guid? OrganizationId { get; set; }
     public virtual Organization Organization { get; set; } = default!;
-    //Nguồn dữ liệu
+
+    // Nguồn dữ liệu
     public string? Resource { get; set; }
     public string? Metadata { get; set; }
-    //Loại dữ liệu
+
+    // Loại dữ liệu
     public Guid? DataTypeId { get; set; }
     public virtual DataType DataType { get; set; } = default!;
-    //Lĩnh vực của dữ liệu
+
+    // Lĩnh vực của dữ liệu
     public Guid? CategoryId { get; set; }
     public virtual Category Category { get; set; } = default!;
-    //Hình thức cung cấp
+
+    // Hình thức cung cấp
     public Guid? ProviderTypeId { get; set; }
     public virtual ProviderType ProviderType { get; set; } = default!;
 
@@ -57,7 +73,6 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     public virtual DatasetAPIConfig? DatasetAPIConfig { get; set; } = default!;
     public virtual DatasetFileConfig? DatasetFileConfig { get; set; } = default!;
     public virtual DatasetDBConfig? DatasetDBConfig { get; set; } = default!;
-
 
     public string? Tenant { get; set; }
 

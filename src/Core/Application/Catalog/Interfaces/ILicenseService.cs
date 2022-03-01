@@ -8,7 +8,6 @@ public interface ILicenseService : ITransientService
 {
     Task<Result<LicenseDetailsDto>> GetDetailsAsync(Guid id);
 
-
     Task<PaginatedResult<LicenseDto>> SearchAsync(LicenseListFilter filter);
 
     Task<Result<Guid>> CreateAsync(CreateLicenseRequest request);

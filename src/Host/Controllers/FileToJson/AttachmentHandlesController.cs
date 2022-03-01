@@ -28,7 +28,6 @@ public class AttachmentHandlesController : BaseController
         Stream? stream = file.OpenReadStream();
         var a = _textReader.GetData(stream);
 
-        // _sqlService.CreateTableSql(a);
         return Ok(a);
     }
 

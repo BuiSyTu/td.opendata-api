@@ -14,7 +14,6 @@ public class License : AuditableEntity, IMustHaveTenant
 
     public virtual ICollection<Dataset> Datasets { get; set; }
 
-
     public License()
     {
     }

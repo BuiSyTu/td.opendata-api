@@ -22,13 +22,12 @@ public class DatasetService : IDatasetService
     private readonly IJobService _jobService;
     private readonly IFileStorageService _file;
 
-
     public DatasetService(IRepositoryAsync repository, IStringLocalizer<DatasetService> localizer, IJobService jobService, IFileStorageService file)
     {
         _repository = repository;
         _localizer = localizer;
         _jobService = jobService;
-        _file  = file;
+        _file = file;
     }
 
     public async Task<Result<Guid>> CreateAsync(CreateDatasetRequest request)
@@ -50,10 +49,10 @@ public class DatasetService : IDatasetService
         item.DomainEvents.Add(new StatsChangedEvent());
         var itemDatasetId = await _repository.CreateAsync(item);
 
-
         var dataType = await _repository.GetByIdAsync<DataType>((Guid)request.DataTypeId);
 
-        if (string.Equals(dataType.Code, "webapi", StringComparison.OrdinalIgnoreCase) && request.DatasetAPIConfig != null) {
+        if (string.Equals(dataType.Code, "webapi", StringComparison.OrdinalIgnoreCase) && request.DatasetAPIConfig != null)
+        {
             var itemConfig = request.DatasetAPIConfig.Adapt<DatasetAPIConfig>();
             itemConfig.DatasetId = itemDatasetId;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
@@ -73,13 +72,10 @@ public class DatasetService : IDatasetService
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
         }
+
         await _repository.SaveChangesAsync();
 
         string jobId = _jobService.Enqueue<IDatasetJob>(x => x.DatasetWebAPIAsync(itemDatasetId));
-
-
-
-   
 
         return await Result<Guid>.SuccessAsync(itemDatasetId);
     }
