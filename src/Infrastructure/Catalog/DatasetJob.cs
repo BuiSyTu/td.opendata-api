@@ -123,8 +123,7 @@ public class DatasetJob : IDatasetJob
             var datasetAPIConfigs = await _repository.GetListAsync<DatasetAPIConfig>(x => x.DatasetId == idDataset);
             var datasetAPIConfig = datasetAPIConfigs.FirstOrDefault();
 
-
-            var metadata = dataset.Metadata;
+            string? metadata = dataset.Metadata;
             if (string.IsNullOrWhiteSpace(metadata))
             {
                 await Notify("Lỗi, dữ liệu chưa được đồng bộ!");
@@ -133,7 +132,7 @@ public class DatasetJob : IDatasetJob
 
             List<MetadataDto> listMetadatas = JsonConvert.DeserializeObject<List<MetadataDto>>(metadata);
 
-            var sql = $"CREATE TABLE [{datasetAPIConfig.TableName}-{idDataset}] ([DocId] uniqueidentifier NOT NULL";
+            string? sql = $"CREATE TABLE [{datasetAPIConfig.TableName}-{idDataset}] ([DocId] uniqueidentifier NOT NULL";
             foreach (var metadataitem in listMetadatas)
             {
                 if (string.Equals(metadataitem.DataType, "string", StringComparison.OrdinalIgnoreCase))

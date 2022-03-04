@@ -22,7 +22,11 @@ public class DatasetService : IDatasetService
     private readonly IJobService _jobService;
     private readonly IFileStorageService _file;
 
-    public DatasetService(IRepositoryAsync repository, IStringLocalizer<DatasetService> localizer, IJobService jobService, IFileStorageService file)
+    public DatasetService(
+        IRepositoryAsync repository,
+        IStringLocalizer<DatasetService> localizer,
+        IJobService jobService,
+        IFileStorageService file)
     {
         _repository = repository;
         _localizer = localizer;
@@ -34,14 +38,19 @@ public class DatasetService : IDatasetService
     {
         bool itemExists = await _repository.ExistsAsync<Dataset>(a => a.Name == request.Name && a.Code == request.Code);
         if (itemExists) throw new EntityAlreadyExistsException(string.Format(_localizer["dataset.alreadyexists"], request.Name));
+
         bool licenseExists = await _repository.ExistsAsync<License>(a => a.Id == request.LicenseId);
         if (!licenseExists) throw new EntityNotFoundException(string.Format(_localizer["License.notfound"], request.LicenseId));
+
         bool organizationExists = await _repository.ExistsAsync<Organization>(a => a.Id == request.OrganizationId);
         if (!organizationExists) throw new EntityNotFoundException(string.Format(_localizer["Organization.notfound"], request.OrganizationId));
+
         bool dataTypeExists = await _repository.ExistsAsync<DataType>(a => a.Id == request.DataTypeId);
         if (!dataTypeExists) throw new EntityNotFoundException(string.Format(_localizer["DataType.notfound"], request.DataTypeId));
+
         bool categoryExists = await _repository.ExistsAsync<Category>(a => a.Id == request.CategoryId);
         if (!categoryExists) throw new EntityNotFoundException(string.Format(_localizer["Category.notfound"], request.CategoryId));
+
         bool providerTypeExists = await _repository.ExistsAsync<ProviderType>(a => a.Id == request.ProviderTypeId);
         if (!providerTypeExists) throw new EntityNotFoundException(string.Format(_localizer["ProviderType.notfound"], request.ProviderTypeId));
 
@@ -123,8 +132,15 @@ public class DatasetService : IDatasetService
         return await _repository.GetListAsync<Dataset, DatasetDto>(specification);
     }
 
-    public Task<Result<Guid>> UpdateAsync(UpdateDatasetRequest request, Guid id)
+    public async Task<Result<Guid>> UpdateAsync(UpdateDatasetRequest request, Guid id)
     {
-        throw new NotImplementedException();
+        var item = await _repository.GetByIdAsync<Dataset>(id);
+        if (item == null) throw new EntityNotFoundException(string.Format(_localizer["dataset.notfound"], id));
+
+        var itemToUpdate = item.Update(request);
+        itemToUpdate.DomainEvents.Add(new StatsChangedEvent());
+        await _repository.UpdateAsync(itemToUpdate);
+        await _repository.SaveChangesAsync();
+        return await Result<Guid>.SuccessAsync(id);
     }
 }

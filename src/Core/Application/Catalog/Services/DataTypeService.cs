@@ -39,12 +39,22 @@ public class DataTypeService : IDataTypeService
     public async Task<Result<Guid>> DeleteAsync(Guid id)
     {
         var itemToDelete = await _repository.RemoveByIdAsync<DataType>(id);
+
+        var codeCannotBeDelete = new List<string>()
+        {
+            "webapi",
+            "excel"
+        };
+
+        if (codeCannotBeDelete.Contains(itemToDelete.Code.ToLower()))
+        {
+            throw new Exception("Item cannot be deleted because it is system item");
+        }
+
         itemToDelete.DomainEvents.Add(new StatsChangedEvent());
         await _repository.SaveChangesAsync();
         return await Result<Guid>.SuccessAsync(id);
     }
-
-
 
     public async Task<Result<DataTypeDetailsDto>> GetDetailsAsync(Guid id)
     {

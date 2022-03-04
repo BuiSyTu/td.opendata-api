@@ -58,8 +58,6 @@ public class CategoryService : ICategoryService
         return await Result<Guid>.SuccessAsync(id);
     }
 
-
-
     public async Task<Result<CategoryDetailsDto>> GetDetailsAsync(Guid id)
     {
 #pragma warning disable CS8603 // Possible null reference return.

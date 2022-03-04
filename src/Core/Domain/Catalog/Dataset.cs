@@ -1,6 +1,7 @@
 ﻿using TD.OpenData.WebApi.Domain.Common;
 using TD.OpenData.WebApi.Domain.Common.Contracts;
 using TD.OpenData.WebApi.Domain.Contracts;
+using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 
 namespace TD.OpenData.WebApi.Domain.Catalog;
 
@@ -36,18 +37,6 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     public Guid? LicenseId { get; set; }
     public virtual License License { get; set; } = default!;
 
-    // Tác giả
-    public string? Author { get; set; }
-
-    // Email của tác giả
-    public string? AuthorEmail { get; set; }
-
-    // Người bảo trì
-    public string? Maintainer { get; set; }
-
-    // Email người bảo trì
-    public string? MaintainerEmail { get; set; }
-
     // Đơn vị tạo dữ liệu
     public Guid? OrganizationId { get; set; }
     public virtual Organization Organization { get; set; } = default!;
@@ -68,6 +57,18 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     public Guid? ProviderTypeId { get; set; }
     public virtual ProviderType ProviderType { get; set; } = default!;
 
+    // Tác giả
+    public string? Author { get; set; }
+
+    // Email của tác giả
+    public string? AuthorEmail { get; set; }
+
+    // Người bảo trì
+    public string? Maintainer { get; set; }
+
+    // Email người bảo trì
+    public string? MaintainerEmail { get; set; }
+
     public virtual ICollection<DatasetOffice> DatasetOffices { get; set; } = new List<DatasetOffice>();
     public virtual ICollection<CustomField> CustomFields { get; set; } = new List<CustomField>();
     public virtual DatasetAPIConfig? DatasetAPIConfig { get; set; } = default!;
@@ -80,27 +81,28 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     {
     }
 
-    public Dataset Update(string? name, string? title, string? description, string? code, string? tags, int? state, bool? visibility, Guid? licenseId, string? author, string? authorEmail, string? maintainer, string? maintainerEmail, Guid? organizationId, string? resource, Guid? dataTypeId, Guid? categoryId, Guid? providerTypeId)
+    public Dataset Update(UpdateDatasetRequest request)
     {
-        if (name != null && !Name.NullToString().Equals(name)) Name = name;
-        if (title != null && !Title.NullToString().Equals(title)) Title = title;
-        if (description != null && !Description.NullToString().Equals(description)) Description = description;
-        if (code != null && !Code.NullToString().Equals(code)) Code = code;
-        if (tags != null && !Tags.NullToString().Equals(tags)) Tags = tags;
-        if (state != null && !State.NullToString().Equals(state)) State = state;
-        if (visibility != null && Visibility != visibility) Visibility = visibility;
+        if (request.Name != null && !Name.NullToString().Equals(request.Name)) Name = request.Name;
+        if (request.Title != null && !Title.NullToString().Equals(request.Title)) Title = request.Title;
+        if (request.Description != null && !Description.NullToString().Equals(request.Description)) Description = request.Description;
+        if (request.Code != null && !Code.NullToString().Equals(request.Code)) Code = request.Code;
+        if (request.Tags != null && !Tags.NullToString().Equals(request.Tags)) Tags = request.Tags;
+        if (request.State != null && !State.NullToString().Equals(request.State)) State = request.State;
+        if (request.Visibility != null && Visibility != request.Visibility) Visibility = request.Visibility;
 
-        if (licenseId != Guid.Empty && !LicenseId.NullToString().Equals(licenseId)) LicenseId = licenseId;
-        if (organizationId != Guid.Empty && !OrganizationId.NullToString().Equals(organizationId)) OrganizationId = organizationId;
-        if (dataTypeId != Guid.Empty && !DataTypeId.NullToString().Equals(dataTypeId)) DataTypeId = dataTypeId;
-        if (categoryId != Guid.Empty && !CategoryId.NullToString().Equals(categoryId)) CategoryId = categoryId;
-        if (providerTypeId != Guid.Empty && !ProviderTypeId.NullToString().Equals(providerTypeId)) ProviderTypeId = providerTypeId;
+        if (request.LicenseId != Guid.Empty && !LicenseId.NullToString().Equals(request.LicenseId)) LicenseId = request.LicenseId;
+        if (request.OrganizationId != Guid.Empty && !OrganizationId.NullToString().Equals(request.OrganizationId)) OrganizationId = request.OrganizationId;
+        if (request.DataTypeId != Guid.Empty && !DataTypeId.NullToString().Equals(request.DataTypeId)) DataTypeId = request.DataTypeId;
+        if (request.CategoryId != Guid.Empty && !CategoryId.NullToString().Equals(request.CategoryId)) CategoryId = request.CategoryId;
+        if (request.ProviderTypeId != Guid.Empty && !ProviderTypeId.NullToString().Equals(request.ProviderTypeId)) ProviderTypeId = request.ProviderTypeId;
 
-        if (author != null && !Author.NullToString().Equals(author)) Author = author;
-        if (authorEmail != null && !AuthorEmail.NullToString().Equals(authorEmail)) AuthorEmail = authorEmail;
-        if (maintainer != null && !Maintainer.NullToString().Equals(maintainer)) Maintainer = maintainer;
-        if (maintainerEmail != null && !MaintainerEmail.NullToString().Equals(maintainerEmail)) MaintainerEmail = maintainerEmail;
-        if (resource != null && !Resource.NullToString().Equals(resource)) Resource = resource;
+        if (request.Author != null && !Author.NullToString().Equals(request.Author)) Author = request.Author;
+        if (request.AuthorEmail != null && !AuthorEmail.NullToString().Equals(request.AuthorEmail)) AuthorEmail = request.AuthorEmail;
+        if (request.Maintainer != null && !Maintainer.NullToString().Equals(request.Maintainer)) Maintainer = request.Maintainer;
+        if (request.MaintainerEmail != null && !MaintainerEmail.NullToString().Equals(request.MaintainerEmail)) MaintainerEmail = request.MaintainerEmail;
+        if (request.Resource != null && !Resource.NullToString().Equals(request.Resource)) Resource = request.Resource;
+        if (request.Tenant != null && !Tenant.NullToString().Equals(request.Tenant)) Tenant = request.Tenant;
         return this;
     }
 }

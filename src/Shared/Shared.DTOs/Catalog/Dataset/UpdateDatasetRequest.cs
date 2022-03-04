@@ -8,6 +8,7 @@ public class UpdateDatasetRequest : IMustBeValid
     public string? Code { get; set; }
     public string? Tags { get; set; }
     public bool? Visibility { get; set; }
+    public int? State { get; set; }
     public Guid? LicenseId { get; set; }
     public string? Author { get; set; }
     public string? AuthorEmail { get; set; }
@@ -20,6 +21,8 @@ public class UpdateDatasetRequest : IMustBeValid
     public Guid? DataTypeId { get; set; }
     public Guid? CategoryId { get; set; }
     public Guid? ProviderTypeId { get; set; }
+
+    public string? Tenant { get; set; }
 
     public CreateDatasetAPIConfigRequest? APIConfig { get; set; }
     public CreateDatasetDBConfigRequest? DBConfig { get; set; }

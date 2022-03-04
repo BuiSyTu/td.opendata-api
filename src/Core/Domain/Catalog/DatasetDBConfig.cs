@@ -29,6 +29,4 @@ public class DatasetDBConfig : AuditableEntity, IMustHaveTenant
 
         return this;
     }
-
-
 }

@@ -14,6 +14,4 @@ public class Attachment : AuditableEntity, IMustHaveTenant
     public Attachment()
     {
     }
-
-
 }
