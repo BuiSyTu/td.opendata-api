@@ -69,8 +69,6 @@ public class LocalFileStorageService : IFileStorageService
         }
     }
 
-
-
     public Task<List<AttachmentDto>> UploadFilesAsync<T>(CreateAttachmentRequest? request)
     where T : class
     {
@@ -82,7 +80,6 @@ public class LocalFileStorageService : IFileStorageService
         {
             throw new InvalidOperationException("File Not Found.");
         }
-
 
         string folder = typeof(T).Name;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -103,22 +100,21 @@ public class LocalFileStorageService : IFileStorageService
         {
             if (formFile.Length > 0)
             {
-                var fileName = formFile.FileName.Trim('"');
+                string? fileName = formFile.FileName.Trim('"');
                 fileName = RemoveSpecialCharacters(fileName);
                 fileName = fileName.ReplaceWhitespace("-");
 
                 Guid dir_UUID = Guid.NewGuid();
                 string dir_UUID_String = dir_UUID.ToString();
 
-
-                var target = Path.Combine(pathToSave, dir_UUID_String);
+                string? target = Path.Combine(pathToSave, dir_UUID_String);
                 if (!Directory.Exists(target))
                 {
                     Directory.CreateDirectory(target);
                 }
 
-                var fullPath = Path.Combine(target, fileName);
-                var dbPath = Path.Combine(folderName, dir_UUID_String, fileName);
+                string? fullPath = Path.Combine(target, fileName);
+                string? dbPath = Path.Combine(folderName, dir_UUID_String, fileName);
 
                 if (File.Exists(dbPath))
                 {
@@ -130,14 +126,13 @@ public class LocalFileStorageService : IFileStorageService
                 formFile.CopyTo(stream);
                 dbPath = dbPath.Replace("\\", "/");
 
-
-                var attachment = new AttachmentDto();
-                attachment.Name = fileName;
-                attachment.Type = Path.GetExtension(formFile.FileName);
-                attachment.Url = "{server_url}/" + dbPath;
-
+                var attachment = new AttachmentDto
+                {
+                    Name = fileName,
+                    Type = Path.GetExtension(formFile.FileName),
+                    Url = "{server_url}/" + dbPath
+                };
                 listFile.Add(attachment);
-
             }
         }
 

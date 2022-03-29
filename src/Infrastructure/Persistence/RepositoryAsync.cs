@@ -164,7 +164,6 @@ public class RepositoryAsync : IRepositoryAsync
     }
 
     // Get One By Condition
-
     public Task<T?> GetAsync<T>(
         Expression<Func<T, bool>>? condition = null,
         Expression<Func<T, object>>[]? includes = null,
@@ -217,7 +216,6 @@ public class RepositoryAsync : IRepositoryAsync
             .CountAsync(cancellationToken);
 
     // Check if Exists
-
     public Task<bool> ExistsAsync<T>(
         Expression<Func<T, bool>> condition,
         CancellationToken cancellationToken = default)
@@ -226,7 +224,6 @@ public class RepositoryAsync : IRepositoryAsync
             .AnyAsync(cancellationToken);
 
     // Filter
-
     private IQueryable<T> Filter<T>(
         Expression<Func<T, bool>>? condition = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
@@ -266,7 +263,6 @@ public class RepositoryAsync : IRepositoryAsync
     }
 
     // Create (these won't work with database generated id's if we were to suport that...)
-
     public async Task<Guid> CreateAsync<T>(T entity, CancellationToken cancellationToken = default)
     where T : BaseEntity
     {
@@ -282,7 +278,6 @@ public class RepositoryAsync : IRepositoryAsync
     }
 
     // Update
-
     public Task UpdateAsync<T>(T entity, CancellationToken cancellationToken = default)
     where T : BaseEntity
     {
@@ -319,7 +314,6 @@ public class RepositoryAsync : IRepositoryAsync
     }
 
     // Delete
-
     public Task RemoveAsync<T>(T entity, CancellationToken cancellationToken = default)
     where T : BaseEntity
     {
@@ -363,12 +357,10 @@ public class RepositoryAsync : IRepositoryAsync
                 cancellationToken: cancellationToken);
 
     // SaveChanges
-
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
         _dbContext.SaveChangesAsync(cancellationToken);
 
     // Dapper
-
     public async Task<IReadOnlyList<T>> QueryAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
     where T : BaseEntity =>
         (await _dbContext.Connection.QueryAsync<T>(sql, param, transaction))
@@ -400,9 +392,6 @@ public class RepositoryAsync : IRepositoryAsync
 
     public Task<int> ExecuteAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
     {
-
         return _dbContext.Connection.ExecuteAsync(sql, param, transaction);
     }
-
-
 }

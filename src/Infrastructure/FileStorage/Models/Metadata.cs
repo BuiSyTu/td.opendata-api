@@ -15,7 +15,7 @@ public class Metadata
         return JsonConvert.SerializeObject(this);
     }
 
-    public static Metadata Parse(string metadata)
+    public static Metadata? Parse(string metadata)
     {
         return JsonConvert.DeserializeObject<Metadata>(metadata);
     }

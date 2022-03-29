@@ -36,7 +36,6 @@ public class DatasetJob : IDatasetJob
     private readonly IProgressBar _progress;
     private readonly ISerializerService _serializerService;
 
-
     public DatasetJob(
         ILogger<DatasetJob> logger,
         IRepositoryAsync repository,
@@ -158,7 +157,8 @@ public class DatasetJob : IDatasetJob
             }
 
             sql += ");";
-             //await _repository.ExecuteAsync(sql);
+
+            // await _repository.ExecuteAsync(sql);
 
             var client = new RestClient();
             var request_ = new RestRequest(datasetAPIConfig.Url, string.Equals(datasetAPIConfig.Method, "post", StringComparison.OrdinalIgnoreCase) ? Method.Post :
@@ -173,11 +173,10 @@ public class DatasetJob : IDatasetJob
                     string? value = headers[k];
                     request_.AddHeader(k, value);
                 }
-            } catch (Exception ex)
-            {
-
             }
-            
+            catch (Exception)
+            {
+            }
 
             if (!string.IsNullOrWhiteSpace(datasetAPIConfig.Data))
             {
@@ -190,30 +189,7 @@ public class DatasetJob : IDatasetJob
             string? content = restResponse.Content;
             dynamic contentObj = JObject.Parse(content);
 
-            //dynamic data = _serializerService.Deserialize<object>(contentObj);
-
-
             dynamic result = contentObj[datasetAPIConfig.DataKey];
-
-
-
-
-
-            /*
-                        var dynamicParameters = new DynamicParameters();
-                        var selects = new List<string>();
-                        for (var i = 0; i < members.Length; i++)
-                        {
-                            var member = members[i];
-                            var pUsername = $"u{i}";
-                            var pIsActive = $"a{i}";
-                            dynamicParameters.Add(pUsername, member.Username);
-                            dynamicParameters.Add(pIsActive, member.IsActive);
-                            selects.Add("select @{pUsername},@{pIsActive}");
-                        }
-                        con.Execute($"insert into Member(Username, IsActive){string.Join(" union all ", selects)}", dynamicParameters);*/
-
-
 
             var count = result.Count;
             if (count < 1)
@@ -221,36 +197,12 @@ public class DatasetJob : IDatasetJob
                 throw new Exception(string.Format(_localizer["dataset.notfound"], idDataset));
             }
 
-           var insertSql = $"INSERT INTO [{datasetAPIConfig.TableName}-{idDataset}] ([Docid],{string.Join(", ", listMetadatas.Select(e => $"[{e.Data}]"))}) VALUES  (@Docid, {string.Join(", ", listMetadatas.Select(e => $"@{e.Data}"))})";
-
-            //var insertSql = $"INSERT INTO {datasetAPIConfig.TableName}-{idDataset} ([Docid], {string.Join(", ", listMetadatas.Select(e => $"[{e.Data}]"))}) VALUES ";
+            string? insertSql = $"INSERT INTO [{datasetAPIConfig.TableName}-{idDataset}] ([Docid],{string.Join(", ", listMetadatas.Select(e => $"[{e.Data}]"))}) VALUES  (@Docid, {string.Join(", ", listMetadatas.Select(e => $"@{e.Data}"))})";
 
             var sqlToExecute = new List<Tuple<string, DynamicParameters>>();
 
-
-
-
             foreach (dynamic itemResult in result)
             {
-
-
-                /* foreach (var metadataitem in listMetadatas)
-                 {
-                     try
-                     {
-                         var tmpp = string.Equals(metadataitem.DataType, "string", StringComparison.OrdinalIgnoreCase) ? Convert.ToString(itemResult[metadataitem.Data])
-                            : string.Equals(metadataitem.DataType, "datetime", StringComparison.OrdinalIgnoreCase) ? Convert.ToDateTime(itemResult[metadataitem.Data])
-                            : string.Equals(metadataitem.DataType, "boolean", StringComparison.OrdinalIgnoreCase) ? Convert.ToBoolean(itemResult[metadataitem.Data])
-                            : string.Equals(metadataitem.DataType, "int", StringComparison.OrdinalIgnoreCase) ? Convert.ToInt32(itemResult[metadataitem.Data])
-                            : string.Equals(metadataitem.DataType, "decimal", StringComparison.OrdinalIgnoreCase) ? Convert.ToDecimal(itemResult[metadataitem.Data])
-                            : string.Empty;
-                     }
-                     catch (Exception e)
-                     {
-
-                     }
-                 }*/
-
                 var p = new DynamicParameters();
                 p.Add("@Docid", Guid.NewGuid());
                 p.Add("@id", "123");
@@ -263,51 +215,27 @@ public class DatasetJob : IDatasetJob
                 p.Add("@imDbRating", "123");
                 p.Add("@imDbRatingCount", "123");
 
-                /* var tmpsql = $"({string.Join(", ", "N'" + listMetadatas.Select(metadataitem => string.Equals(metadataitem.DataType, "string", StringComparison.OrdinalIgnoreCase) ? Convert.ToString(itemResult[metadataitem.Data]) : string.Equals(metadataitem.DataType, "datetime", StringComparison.OrdinalIgnoreCase) ? Convert.ToDateTime(itemResult[metadataitem.Data]) : string.Equals(metadataitem.DataType, "boolean", StringComparison.OrdinalIgnoreCase) ? Convert.ToBoolean(itemResult[metadataitem.Data]) : string.Equals(metadataitem.DataType, "int", StringComparison.OrdinalIgnoreCase) ? Convert.ToInt32(itemResult[metadataitem.Data]) : string.Equals(metadataitem.DataType, "decimal", StringComparison.OrdinalIgnoreCase) ? Convert.ToDecimal(itemResult[metadataitem.Data]) : string.Empty) + "'" )})";*/
-
-                //var tmpsql = $"(N)";
-                //var valueSql = GetQueries(dataToInsert, dataFunc);
-
-                //sqlToExecute.Add(Tuple.Create($"{insertSql} {tmpsql}"));
-
                 try
                 {
-                   // var sqltmp = $"{insertSql} {tmpsql}";
                     await _repository.ExecuteAsync(insertSql, p);
-
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                 }
-
-
             }
-            /* 
-             foreach (dynamic item in result)
-             {
-                 var itemdefail = _serializerService.Deserialize<Dictionary<string, string>>(dynamic);
 
-
-             }*/
-            
-
-
-         await _eventService.PublishAsync(new StatsChangedEvent());
+            await _eventService.PublishAsync(new StatsChangedEvent());
             await Notify("Dữ liệu đồng bộ xong!");
-
         }
         catch (Exception ex)
         {
             await Notify("Dữ liệu đồng bộ lỗi!");
             throw new Exception(string.Format(_localizer["dataset.notfound"], ex.Message));
         }
-
     }
 
     public DataTable ToDataTable<T>(dynamic items)
     {
-
         DataTable dtDataTable = new DataTable();
         if (items.Count == 0) return dtDataTable;
 
@@ -323,7 +251,6 @@ public class DatasetJob : IDatasetJob
         return dtDataTable;
     }
 
-
     public DataTable ConvertToDataTable<T>(IList<T> data)
     {
         PropertyDescriptorCollection properties =
@@ -338,6 +265,7 @@ public class DatasetJob : IDatasetJob
                 row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
             table.Rows.Add(row);
         }
+
         return table;
     }
 

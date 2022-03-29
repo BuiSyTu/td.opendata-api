@@ -7,7 +7,7 @@ namespace TD.OpenData.WebApi.Infrastructure.Common.Services;
 
 public class NewtonSoftService : ISerializerService
 {
-    public T Deserialize<T>(string text)
+    public T? Deserialize<T>(string text)
     {
         return JsonConvert.DeserializeObject<T>(text);
     }

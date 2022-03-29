@@ -32,6 +32,13 @@ public class DatasetsController : BaseController
         return Ok(product);
     }
 
+    [HttpGet("{id:guid}/data")]
+    public async Task<ActionResult<Result<DatasetDetailsDto>>> GetDataByIdAsync(Guid id)
+    {
+        var product = await _service.GetDetailsAsync(id);
+        return Ok(product);
+    }
+
     [HttpPost("search")]
     [OpenApiOperation("Danh sách dataset.", "")]
     public async Task<ActionResult<PaginatedResult<DatasetDto>>> SearchAsync(DatasetListFilter filter)
@@ -56,6 +63,20 @@ public class DatasetsController : BaseController
     public async Task<ActionResult<Result<Guid>>> DeleteAsync(Guid id)
     {
         var itemId = await _service.DeleteAsync(id);
+        return Ok(itemId);
+    }
+
+    [HttpPatch("approved/{id:guid}")]
+    public async Task<ActionResult<Result<Guid>>> ApprovedAsync(Guid id)
+    {
+        var itemId = await _service.ApprovedAsync(id);
+        return Ok(itemId);
+    }
+
+    [HttpPatch("rejected/{id:guid}")]
+    public async Task<ActionResult<Result<Guid>>> RejectedAsync(Guid id)
+    {
+        var itemId = await _service.RejectedAsync(id);
         return Ok(itemId);
     }
 }

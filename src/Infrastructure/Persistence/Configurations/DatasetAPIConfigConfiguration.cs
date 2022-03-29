@@ -16,6 +16,5 @@ internal class DatasetAPIConfigConfiguration : IEntityTypeConfiguration<DatasetA
         builder.ToTable("DatasetAPIConfigs");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd().HasColumnType("uniqueidentifier");
-      
     }
 }

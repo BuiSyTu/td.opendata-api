@@ -147,11 +147,10 @@ public class TokenService : ITokenService
                 new(ClaimConstants.NameIdentifier, user.Id ?? string.Empty),
                 new(ClaimConstants.Sub, user.UserName ?? string.Empty),
                 new(ClaimConstants.Email, user.Email ?? string.Empty),
-                //new(ClaimTypes.Surname, user.LastName ?? string.Empty),
                 new(ClaimConstants.IpAddress, ipAddress),
                 new(ClaimConstants.Tenant, tenant ?? string.Empty),
-                new(ClaimConstants.Issuer,"vnd"),
-                new(ClaimConstants.Audience,"vnd"),
+                new(ClaimConstants.Issuer, "vnd"),
+                new(ClaimConstants.Audience, "vnd"),
             }.Union(userClaims)
             .Union(roleClaims);
     }

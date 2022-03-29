@@ -32,8 +32,7 @@ public class ResponseLoggingMiddleware : IMiddleware
         }
 
         string email = _currentUser.GetUserEmail() is string userEmail ? userEmail : "Anonymous";
-        var userId = _currentUser.GetUserName();
-        //string tenant = _currentUser.GetTenant() ?? string.Empty;
+        string? userId = _currentUser.GetUserName();
         string tenant = _currentUser.GetTenant() ?? "root";
         if (userId != string.Empty) LogContext.PushProperty("UserName", userId);
         LogContext.PushProperty("UserEmail", email);

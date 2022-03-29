@@ -41,10 +41,6 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     public Guid? OrganizationId { get; set; }
     public virtual Organization Organization { get; set; } = default!;
 
-    // Nguồn dữ liệu
-    public string? Resource { get; set; }
-    public string? Metadata { get; set; }
-
     // Loại dữ liệu
     public Guid? DataTypeId { get; set; }
     public virtual DataType DataType { get; set; } = default!;
@@ -56,6 +52,10 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     // Hình thức cung cấp
     public Guid? ProviderTypeId { get; set; }
     public virtual ProviderType ProviderType { get; set; } = default!;
+
+    // Nguồn dữ liệu
+    public string? Resource { get; set; }
+    public string? Metadata { get; set; }
 
     // Tác giả
     public string? Author { get; set; }
@@ -102,6 +102,7 @@ public class Dataset : AuditableEntity, IMustHaveTenant
         if (request.Maintainer != null && !Maintainer.NullToString().Equals(request.Maintainer)) Maintainer = request.Maintainer;
         if (request.MaintainerEmail != null && !MaintainerEmail.NullToString().Equals(request.MaintainerEmail)) MaintainerEmail = request.MaintainerEmail;
         if (request.Resource != null && !Resource.NullToString().Equals(request.Resource)) Resource = request.Resource;
+        if (request.Metadata != null && !Metadata.NullToString().Equals(request.Metadata)) Metadata = request.Metadata;
         if (request.Tenant != null && !Tenant.NullToString().Equals(request.Tenant)) Tenant = request.Tenant;
         return this;
     }

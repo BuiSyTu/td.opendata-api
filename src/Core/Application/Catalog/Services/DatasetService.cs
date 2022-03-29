@@ -34,6 +34,17 @@ public class DatasetService : IDatasetService
         _file = file;
     }
 
+    public async Task<Result<Guid>> ApprovedAsync(Guid id)
+    {
+        var item = await _repository.GetByIdAsync<Dataset>(id);
+        if (item == null) throw new EntityNotFoundException(string.Format(_localizer["dataset.notfound"], id));
+
+        item.State = 1;
+        await _repository.UpdateAsync(item);
+        await _repository.SaveChangesAsync();
+        return await Result<Guid>.SuccessAsync(id);
+    }
+
     public async Task<Result<Guid>> CreateAsync(CreateDatasetRequest request)
     {
         bool itemExists = await _repository.ExistsAsync<Dataset>(a => a.Name == request.Name && a.Code == request.Code);
@@ -97,13 +108,34 @@ public class DatasetService : IDatasetService
         return await Result<Guid>.SuccessAsync(id);
     }
 
+    public Task<object> GetDataAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<Result<DatasetDetailsDto>> GetDetailsAsync(Guid id)
     {
 #pragma warning disable CS8603 // Possible null reference return.
-        var includes = new Expression<Func<Dataset, object>>[] { x => x.Category, y => y.DataType, z => z.Organization, x => x.License, x => x.ProviderType, x => x.DatasetAPIConfig, x => x.DatasetDBConfig, x => x.DatasetFileConfig };
+        var includes = new Expression<Func<Dataset, object>>[]
+        {
+            x => x.Category, y => y.DataType, z => z.Organization,
+            x => x.License, x => x.ProviderType, x => x.DatasetAPIConfig,
+            x => x.DatasetDBConfig, x => x.DatasetFileConfig
+        };
 #pragma warning restore CS8603 // Possible null reference return.
         var item = await _repository.GetByIdAsync<Dataset, DatasetDetailsDto>(id, includes);
         return await Result<DatasetDetailsDto>.SuccessAsync(item);
+    }
+
+    public async Task<Result<Guid>> RejectedAsync(Guid id)
+    {
+        var item = await _repository.GetByIdAsync<Dataset>(id);
+        if (item == null) throw new EntityNotFoundException(string.Format(_localizer["dataset.notfound"], id));
+
+        item.State = 2;
+        await _repository.UpdateAsync(item);
+        await _repository.SaveChangesAsync();
+        return await Result<Guid>.SuccessAsync(id);
     }
 
     public async Task<PaginatedResult<DatasetDto>> SearchAsync(DatasetListFilter filter)

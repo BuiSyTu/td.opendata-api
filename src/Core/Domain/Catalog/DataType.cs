@@ -11,11 +11,7 @@ public class DataType : AuditableEntity, IMustHaveTenant
     public string? Code { get; set; }
     public bool? IsActive { get;  set; }
     public string? Tenant { get; set; }
-    public virtual ICollection<Dataset> Datasets { get; set; }
-
-    public DataType()
-    {
-    }
+    public virtual ICollection<Dataset>? Datasets { get; set; }
 
     public DataType Update(string? name, string? description, string? code, bool? isActive)
     {

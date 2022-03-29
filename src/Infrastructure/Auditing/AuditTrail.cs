@@ -14,7 +14,7 @@ public class AuditTrail
     }
 
     public EntityEntry Entry { get; }
-    public string UserName { get; set; }
+    public string? UserName { get; set; }
     public string? TableName { get; set; }
     public Dictionary<string, object?> KeyValues { get; } = new();
     public Dictionary<string, object?> OldValues { get; } = new();

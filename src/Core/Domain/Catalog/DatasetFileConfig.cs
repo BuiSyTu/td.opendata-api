@@ -6,7 +6,7 @@ namespace TD.OpenData.WebApi.Domain.Catalog;
 
 public class DatasetFileConfig : AuditableEntity, IMustHaveTenant
 {
-    public string? FileType  { get;  set; }
+    public string? FileType { get;  set; }
     public string? FileName { get;  set; }
     public string? FileData { get; set; }
     public string? TableName { get; set; }
@@ -14,10 +14,6 @@ public class DatasetFileConfig : AuditableEntity, IMustHaveTenant
     public Guid? DatasetId { get; set; }
 
     public virtual Dataset Dataset { get; set; } = default!;
-
-    public DatasetFileConfig()
-    {
-    }
 
     public DatasetFileConfig Update(string? fileType, string? fileName, string? fileData, Guid? datasetId)
     {

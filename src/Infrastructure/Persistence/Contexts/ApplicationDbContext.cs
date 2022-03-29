@@ -39,8 +39,6 @@ public class ApplicationDbContext : BaseDbContext
     public DbSet<Attachment> Attachments => Set<Attachment>();
     public DbSet<DatasetOffice> DatasetOffices => Set<DatasetOffice>();
 
-
-
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         string? currentUserId = _currentUserService.GetUserName();
@@ -89,6 +87,7 @@ public class ApplicationDbContext : BaseDbContext
 
         return results;
     }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfiguration(new CategoryConfiguration());
