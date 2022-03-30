@@ -21,12 +21,7 @@ public class SqlService : ISqlService
         _repositoryAsync = repositoryAsync;
     }
 
-    public void CreateColumnSql(Dataset dataset)
-    {
-        throw new NotImplementedException();
-    }
-
-    public string? CreateTableSql(PreviewData previewData)
+    private string? CreateTableSql(PreviewData previewData)
     {
         string? tableName = Guid.NewGuid().ToString().Replace("-", "_");
 
@@ -55,16 +50,16 @@ public class SqlService : ISqlService
         }
     }
 
-    public async void CreateTableSql(Guid datasetId)
+    public async Task<Dataset> CreateTableAsync(Guid datasetId)
     {
         Dataset? dataset = await _repositoryAsync.GetByIdAsync<Dataset>(datasetId);
         var previewData = dataset.Metadata.ToPreviewData();
-
         string? tableName = CreateTableSql(previewData);
         dataset.TableName = tableName;
+        return dataset;
     }
 
-    public void ImportData(Dataset dataset)
+    public Task ImportData(Guid datasetId)
     {
         throw new NotImplementedException();
     }

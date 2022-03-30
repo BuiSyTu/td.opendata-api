@@ -11,8 +11,6 @@ namespace TD.OpenData.WebApi.Infrastructure.FileStorage.Interfaces;
 
 public interface ISqlService : ITransientService
 {
-    string? CreateTableSql(PreviewData previewData);
-    void CreateTableSql(Guid datasetId);
-    void CreateColumnSql(Dataset dataset);
-    void ImportData(Dataset dataset);
+    Task<Dataset> CreateTableAsync(Guid datasetId);
+    Task ImportData(Guid datasetId);
 }
