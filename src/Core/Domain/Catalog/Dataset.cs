@@ -69,6 +69,8 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     // Email người bảo trì
     public string? MaintainerEmail { get; set; }
 
+    public string? TableName { get; set; }
+
     public virtual ICollection<DatasetOffice> DatasetOffices { get; set; } = new List<DatasetOffice>();
     public virtual ICollection<CustomField> CustomFields { get; set; } = new List<CustomField>();
     public virtual DatasetAPIConfig? DatasetAPIConfig { get; set; } = default!;
@@ -76,10 +78,6 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     public virtual DatasetDBConfig? DatasetDBConfig { get; set; } = default!;
 
     public string? Tenant { get; set; }
-
-    public Dataset()
-    {
-    }
 
     public Dataset Update(UpdateDatasetRequest request)
     {
@@ -104,6 +102,8 @@ public class Dataset : AuditableEntity, IMustHaveTenant
         if (request.Resource != null && !Resource.NullToString().Equals(request.Resource)) Resource = request.Resource;
         if (request.Metadata != null && !Metadata.NullToString().Equals(request.Metadata)) Metadata = request.Metadata;
         if (request.Tenant != null && !Tenant.NullToString().Equals(request.Tenant)) Tenant = request.Tenant;
+
+        if (request.TableName != null && !TableName.NullToString().Equals(request.TableName)) TableName = request.TableName;
         return this;
     }
 }

@@ -19,7 +19,6 @@ public class AttachmentService : IAttachmentService
     private readonly IJobService _jobService;
     private readonly IFileStorageService _file;
 
-
     public AttachmentService(IRepositoryAsync repository, IStringLocalizer<AttachmentService> localizer, IJobService jobService, IFileStorageService file)
     {
         _repository = repository;

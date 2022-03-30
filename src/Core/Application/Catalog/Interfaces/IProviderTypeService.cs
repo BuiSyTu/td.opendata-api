@@ -8,7 +8,6 @@ public interface IProviderTypeService : ITransientService
 {
     Task<Result<ProviderTypeDetailsDto>> GetDetailsAsync(Guid id);
 
-
     Task<PaginatedResult<ProviderTypeDto>> SearchAsync(ProviderTypeListFilter filter);
 
     Task<Result<Guid>> CreateAsync(CreateProviderTypeRequest request);

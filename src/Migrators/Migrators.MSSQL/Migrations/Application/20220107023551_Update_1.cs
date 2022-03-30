@@ -2,34 +2,33 @@
 
 #nullable disable
 
-namespace Migrators.MSSQL.Migrations.Application
+namespace Migrators.MSSQL.Migrations.Application;
+
+public partial class Update_1 : Migration
 {
-    public partial class Update_1 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "DataNameNew",
-                table: "Metadatas");
+        migrationBuilder.DropColumn(
+            name: "DataNameNew",
+            table: "Metadatas");
 
-            migrationBuilder.RenameColumn(
-                name: "DataNameOld",
-                table: "Metadatas",
-                newName: "Data");
-        }
+        migrationBuilder.RenameColumn(
+            name: "DataNameOld",
+            table: "Metadatas",
+            newName: "Data");
+    }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.RenameColumn(
-                name: "Data",
-                table: "Metadatas",
-                newName: "DataNameOld");
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.RenameColumn(
+            name: "Data",
+            table: "Metadatas",
+            newName: "DataNameOld");
 
-            migrationBuilder.AddColumn<string>(
-                name: "DataNameNew",
-                table: "Metadatas",
-                type: "nvarchar(max)",
-                nullable: true);
-        }
+        migrationBuilder.AddColumn<string>(
+            name: "DataNameNew",
+            table: "Metadatas",
+            type: "nvarchar(max)",
+            nullable: true);
     }
 }

@@ -10,7 +10,6 @@ public class DatasetDBConfig : AuditableEntity, IMustHaveTenant
     public string? ConnectionString { get;  set; }
     public string? DatabaseName { get; set; }
     public string? DataTable { get;  set; }
-    public string? TableName { get; set; }
     public Guid? DatasetId { get; set; }
     public virtual Dataset Dataset { get; set; } = default!;
     public string? Tenant { get; set; }

@@ -8,7 +8,6 @@ public interface IDatasetJob : IScopedService
     [DisplayName("Đồng bộ dữ liệu WebAPI")]
     Task DatasetWebAPIAsync(Guid idDataset);
 
-    
     [DisplayName("Đồng bộ dữ liệu Database")]
     Task DatasetDatabaseAsync(Guid idDataset);
 

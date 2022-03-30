@@ -2,18 +2,17 @@
 
 #nullable disable
 
-namespace Migrators.MSSQL.Migrations.Application
+namespace Migrators.MSSQL.Migrations.Application;
+
+public partial class Update_10 : Migration
 {
-    public partial class Update_10 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
 
-        }
+    }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
 
-        }
     }
 }

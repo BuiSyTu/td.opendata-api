@@ -36,7 +36,6 @@ internal class ExceptionMiddleware : IMiddleware
         {
             string email = _currentUser.GetUserEmail() is string userEmail ? userEmail : "Anonymous";
             string? userId = _currentUser.GetUserName();
-            //string tenant = _currentUser.GetTenant() ?? string.Empty;
             string tenant = _currentUser.GetTenant() ?? "root";
             if (userId != string.Empty) LogContext.PushProperty("UserName", userId);
             LogContext.PushProperty("UserEmail", email);

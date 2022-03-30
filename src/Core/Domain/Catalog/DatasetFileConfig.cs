@@ -9,7 +9,6 @@ public class DatasetFileConfig : AuditableEntity, IMustHaveTenant
     public string? FileType { get;  set; }
     public string? FileName { get;  set; }
     public string? FileData { get; set; }
-    public string? TableName { get; set; }
     public string? Tenant { get; set; }
     public Guid? DatasetId { get; set; }
 

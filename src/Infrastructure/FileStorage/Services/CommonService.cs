@@ -35,4 +35,24 @@ public static class CommonService
         previewData.Metadata = metadataCollection;
         return previewData;
     }
+
+    public static MetadataCollection ToMetadataCollection(this string jsonString)
+    {
+        var data = JObject.Parse(jsonString);
+
+        MetadataCollection metadataCollection = new();
+        foreach (JProperty property in data.Properties())
+        {
+            metadataCollection.Add(new Metadata
+            {
+                Data = property.Name,
+                Example = property.Value.ToString(),
+                Type = property.Value.Type.ToString(),
+                IsDisplay = true,
+                Title = property.Name
+            });
+        }
+
+        return metadataCollection;
+    }
 }

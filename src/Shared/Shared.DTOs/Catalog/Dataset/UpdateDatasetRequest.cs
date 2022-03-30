@@ -18,6 +18,8 @@ public class UpdateDatasetRequest : IMustBeValid
     public string? Resource { get; set; }
     public string? Metadata { get; set; }
 
+    public string? TableName { get; set; }
+
     public Guid? DataTypeId { get; set; }
     public Guid? CategoryId { get; set; }
     public Guid? ProviderTypeId { get; set; }

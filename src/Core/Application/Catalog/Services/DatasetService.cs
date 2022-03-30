@@ -8,10 +8,9 @@ using TD.OpenData.WebApi.Domain.Dashboard;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using Microsoft.Extensions.Localization;
 using Mapster;
-using TD.OpenData.WebApi.Application.FileStorage;
-using TD.OpenData.WebApi.Domain.Common;
 using TD.OpenData.WebApi.Domain.Common.Contracts;
 using System.Linq.Expressions;
+using TD.OpenData.WebApi.Application.Forward.Interfaces;
 
 namespace TD.OpenData.WebApi.Application.Catalog.Services;
 
@@ -20,18 +19,18 @@ public class DatasetService : IDatasetService
     private readonly IStringLocalizer<DatasetService> _localizer;
     private readonly IRepositoryAsync _repository;
     private readonly IJobService _jobService;
-    private readonly IFileStorageService _file;
+    private readonly IForwardService _forwardService;
 
     public DatasetService(
         IRepositoryAsync repository,
         IStringLocalizer<DatasetService> localizer,
         IJobService jobService,
-        IFileStorageService file)
+        IForwardService forwardService)
     {
         _repository = repository;
         _localizer = localizer;
         _jobService = jobService;
-        _file = file;
+        _forwardService = forwardService;
     }
 
     public async Task<Result<Guid>> ApprovedAsync(Guid id)
@@ -125,6 +124,21 @@ public class DatasetService : IDatasetService
 #pragma warning restore CS8603 // Possible null reference return.
         var item = await _repository.GetByIdAsync<Dataset, DatasetDetailsDto>(id, includes);
         return await Result<DatasetDetailsDto>.SuccessAsync(item);
+    }
+
+    public async Task<Result<string>> PreviewDataAsync(Guid id)
+    {
+#pragma warning disable CS8603 // Possible null reference return.
+        var includes = new Expression<Func<Dataset, object>>[]
+        {
+            x => x.DatasetFileConfig,
+            x => x.DatasetAPIConfig,
+        };
+#pragma warning restore CS8603 // Possible null reference return.
+
+        var dataset = await _repository.GetByIdAsync(id, includes);
+        string? previewData = await _forwardService.ForwardDataset(dataset);
+        return await Result<string>.SuccessAsync(previewData);
     }
 
     public async Task<Result<Guid>> RejectedAsync(Guid id)

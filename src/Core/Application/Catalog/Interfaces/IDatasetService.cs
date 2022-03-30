@@ -17,6 +17,8 @@ public interface IDatasetService : ITransientService
     Task<Result<Guid>> UpdateAsync(UpdateDatasetRequest request, Guid id);
 
     Task<Result<Guid>> DeleteAsync(Guid id);
+
     Task<Result<Guid>> ApprovedAsync(Guid id);
+
     Task<Result<Guid>> RejectedAsync(Guid id);
 }

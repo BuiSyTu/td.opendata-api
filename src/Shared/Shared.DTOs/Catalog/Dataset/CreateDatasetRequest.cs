@@ -19,6 +19,7 @@ public class CreateDatasetRequest : IMustBeValid
     public Guid? DataTypeId { get; set; }
     public Guid? CategoryId { get; set; }
     public Guid? ProviderTypeId { get; set; }
+    public string? TableName { get; set; }
 
     public CreateDatasetAPIConfigRequest? DatasetAPIConfig { get; set; }
     public CreateDatasetDBConfigRequest? DatasetDBConfig { get; set; }

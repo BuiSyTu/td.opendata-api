@@ -21,6 +21,8 @@ public class DatasetDetailsDto : IDto
     public string? Resource { get; set; }
     public string? Metadata { get; set; }
 
+    public string? TableName { get; set; }
+
     public Guid? DataTypeId { get; set; }
     public DataTypeDto? DataType { get; set; }
     public Guid? CategoryId { get; set; }

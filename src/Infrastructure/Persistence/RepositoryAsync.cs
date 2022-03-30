@@ -33,7 +33,6 @@ public class RepositoryAsync : IRepositoryAsync
     }
 
     // Get List
-
     public Task<List<T>> GetListAsync<T>(
         Expression<Func<T, bool>>? condition = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
@@ -207,7 +206,6 @@ public class RepositoryAsync : IRepositoryAsync
                 .FirstOrDefaultAsync(cancellationToken);
 
     // Get Count
-
     public Task<int> GetCountAsync<T>(
         Expression<Func<T, bool>>? condition = null,
         CancellationToken cancellationToken = default)

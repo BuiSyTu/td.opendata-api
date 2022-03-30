@@ -8,5 +8,4 @@ public class DatasetAPIConfigDto : IDto
     public string? Headers { get; set; }
     public string? Data { get; set; }
     public string? DataKey { get; set; }
-    public string? TableName { get; set; }
 }

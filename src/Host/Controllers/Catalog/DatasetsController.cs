@@ -5,6 +5,7 @@ using TD.OpenData.WebApi.Infrastructure.Identity.Permissions;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
+using TD.OpenData.WebApi.Application.Forward.Interfaces;
 
 namespace TD.OpenData.WebApi.Host.Controllers.Catalog;
 
@@ -12,10 +13,14 @@ namespace TD.OpenData.WebApi.Host.Controllers.Catalog;
 public class DatasetsController : BaseController
 {
     private readonly IDatasetService _service;
+    private readonly IForwardService _forwardService;
 
-    public DatasetsController(IDatasetService service)
+    public DatasetsController(
+        IDatasetService service,
+        IForwardService forwardService)
     {
         _service = service;
+        _forwardService = forwardService;
     }
 
     [HttpGet]

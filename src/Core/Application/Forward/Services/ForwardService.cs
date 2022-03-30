@@ -1,6 +1,9 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
+using System.Text.RegularExpressions;
 using TD.OpenData.WebApi.Application.Forward.Interfaces;
+using TD.OpenData.WebApi.Domain.Catalog;
+using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using TD.OpenData.WebApi.Shared.DTOs.Forward;
 
 namespace TD.OpenData.WebApi.Application.Forward.Services;
@@ -31,6 +34,67 @@ public class ForwardService : IForwardService
         return respond.Content;
     }
 
+    public async Task<string?> ForwardDataset(Dataset dataset)
+    {
+        DatasetAPIConfig? config = dataset.DatasetAPIConfig;
+
+        string? url = config?.Url;
+        if (!Uri.IsWellFormedUriString(url, UriKind.Absolute)) throw new Exception("Dataset url is not valid");
+
+        var client = new RestClient(url);
+        var request = new RestRequest(string.Empty, StringToMethod(config?.Method));
+
+        if (!string.IsNullOrEmpty(config?.Headers))
+        {
+            var headers = JsonConvert.DeserializeObject<Dictionary<string, string>>(config.Headers);
+            foreach (var header in headers)
+            {
+                request.AddHeader(header.Key, header.Value);
+            }
+        }
+
+        if (!string.IsNullOrEmpty(config?.Data))
+        {
+            request.AddJsonBody(config.Data, "application/json");
+        }
+
+        var respond = await client.ExecuteAsync(request);
+        return respond.Content;
+    }
+
+    public Task<string?> ForwardDataset(DatasetDetailsDto dataset)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<string?> ForwardDatasetDto(DatasetDetailsDto dataset)
+    {
+        DatasetAPIConfigDto? config = dataset.DatasetAPIConfig;
+
+        string? url = config?.Url;
+        if (!Uri.IsWellFormedUriString(url, UriKind.Absolute)) throw new Exception("Dataset url is not valid");
+
+        var client = new RestClient(url);
+        var request = new RestRequest(string.Empty, StringToMethod(config?.Method));
+
+        if (!string.IsNullOrEmpty(config?.Headers))
+        {
+            var headers = JsonConvert.DeserializeObject<Dictionary<string, string>>(config.Headers);
+            foreach (var header in headers)
+            {
+                request.AddHeader(header.Key, header.Value);
+            }
+        }
+
+        if (!string.IsNullOrEmpty(config?.Data))
+        {
+            request.AddJsonBody(config.Data, "application/json");
+        }
+
+        var respond = await client.ExecuteAsync(request);
+        return respond.Content;
+    }
+
     private Method StringToMethod(string stringMethod)
     {
         return stringMethod switch
@@ -39,6 +103,7 @@ public class ForwardService : IForwardService
             "POST" => Method.Post,
             "PUT" => Method.Put,
             "DELETE" => Method.Delete,
+            "PATCH" => Method.Patch,
             _ => Method.Get,
         };
     }

@@ -13,4 +13,7 @@ public interface IExcelReader : ITransientService
     PreviewData GetData(string? url);
     PreviewData GetData(Stream? stream, int? sheetNumber);
     PreviewData GetData(Stream? stream, string? sheetName);
+
+    MetadataCollection GetMetadata(Stream? stream, int? sheetNumber);
+    MetadataCollection GetMetadata(Stream? stream, string? sheetNumber);
 }

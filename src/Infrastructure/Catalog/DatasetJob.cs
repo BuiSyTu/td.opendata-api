@@ -129,9 +129,9 @@ public class DatasetJob : IDatasetJob
                 throw new EntityNotFoundException(string.Format(_localizer["metadata.notfound"], idDataset));
             }
 
-            List<MetadataDto> listMetadatas = JsonConvert.DeserializeObject<List<MetadataDto>>(metadata);
+            List<MetadataDto>? listMetadatas = JsonConvert.DeserializeObject<List<MetadataDto>>(metadata);
 
-            string? sql = $"CREATE TABLE [{datasetAPIConfig.TableName}-{idDataset}] ([DocId] uniqueidentifier NOT NULL";
+            string? sql = $"CREATE TABLE [{dataset.TableName}-{idDataset}] ([DocId] uniqueidentifier NOT NULL";
             foreach (var metadataitem in listMetadatas)
             {
                 if (string.Equals(metadataitem.DataType, "string", StringComparison.OrdinalIgnoreCase))
@@ -197,7 +197,7 @@ public class DatasetJob : IDatasetJob
                 throw new Exception(string.Format(_localizer["dataset.notfound"], idDataset));
             }
 
-            string? insertSql = $"INSERT INTO [{datasetAPIConfig.TableName}-{idDataset}] ([Docid],{string.Join(", ", listMetadatas.Select(e => $"[{e.Data}]"))}) VALUES  (@Docid, {string.Join(", ", listMetadatas.Select(e => $"@{e.Data}"))})";
+            string? insertSql = $"INSERT INTO [{dataset.TableName}-{idDataset}] ([Docid],{string.Join(", ", listMetadatas.Select(e => $"[{e.Data}]"))}) VALUES  (@Docid, {string.Join(", ", listMetadatas.Select(e => $"@{e.Data}"))})";
 
             var sqlToExecute = new List<Tuple<string, DynamicParameters>>();
 
