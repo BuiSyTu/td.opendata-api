@@ -28,7 +28,7 @@ public class AttachmentsController : BaseController
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<ActionResult<Result<Guid>>> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var itemId = await _service.DeleteAsync(id);
         return Ok(itemId);

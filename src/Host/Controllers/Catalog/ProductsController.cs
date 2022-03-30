@@ -18,14 +18,14 @@ public class ProductsController : BaseController
     }
 
     [HttpGet]
-    public async Task<ActionResult<Result<ProductDetailsDto>>> GetAsync([FromQuery] ProductListFilter filter)
+    public async Task<IActionResult> GetAsync([FromQuery] ProductListFilter filter)
     {
         var products = await _service.SearchAsync(filter);
         return Ok(products);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Result<ProductDetailsDto>>> GetByIdAsync(Guid id)
+    public async Task<IActionResult> GetByIdAsync(Guid id)
     {
         var product = await _service.GetProductDetailsAsync(id);
         return Ok(product);
@@ -33,7 +33,7 @@ public class ProductsController : BaseController
 
     [HttpPost("search")]
     [MustHavePermission(PermissionConstants.Products.Search)]
-    public async Task<ActionResult<PaginatedResult<ProductDto>>> SearchAsync(ProductListFilter filter)
+    public async Task<IActionResult> SearchAsync(ProductListFilter filter)
     {
         var products = await _service.SearchAsync(filter);
         return Ok(products);
@@ -41,28 +41,28 @@ public class ProductsController : BaseController
 
     [HttpGet("dapper")]
     [MustHavePermission(PermissionConstants.Products.View)]
-    public async Task<ActionResult<Result<ProductDto>>> GetDapperAsync(Guid id)
+    public async Task<IActionResult> GetDapperAsync(Guid id)
     {
         var products = await _service.GetByIdUsingDapperAsync(id);
         return Ok(products);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Result<Guid>>> CreateAsync(CreateProductRequest request)
+    public async Task<IActionResult> CreateAsync(CreateProductRequest request)
     {
         return Ok(await _service.CreateProductAsync(request));
     }
 
     [HttpPut("{id:guid}")]
     [MustHavePermission(PermissionConstants.Products.Update)]
-    public async Task<ActionResult<Result<Guid>>> UpdateAsync(UpdateProductRequest request, Guid id)
+    public async Task<IActionResult> UpdateAsync(UpdateProductRequest request, Guid id)
     {
         return Ok(await _service.UpdateProductAsync(request, id));
     }
 
     [HttpDelete("{id:guid}")]
     [MustHavePermission(PermissionConstants.Products.Remove)]
-    public async Task<ActionResult<Result<Guid>>> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var productId = await _service.DeleteProductAsync(id);
         return Ok(productId);

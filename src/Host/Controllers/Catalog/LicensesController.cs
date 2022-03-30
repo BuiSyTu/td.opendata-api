@@ -19,14 +19,14 @@ public class LicensesController : BaseController
     }
 
     [HttpGet]
-    public async Task<ActionResult<PaginatedResult<LicenseDto>>> GetAsync([FromQuery] LicenseListFilter filter)
+    public async Task<IActionResult> GetAsync([FromQuery] LicenseListFilter filter)
     {
         var items = await _service.SearchAsync(filter);
         return Ok(items);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Result<LicenseDetailsDto>>> GetByIdAsync(Guid id)
+    public async Task<IActionResult> GetByIdAsync(Guid id)
     {
         var product = await _service.GetDetailsAsync(id);
         return Ok(product);
@@ -34,26 +34,26 @@ public class LicensesController : BaseController
 
     [HttpPost("search")]
     [OpenApiOperation("Search Licenses using available Filters.", "")]
-    public async Task<ActionResult<PaginatedResult<LicenseDto>>> SearchAsync(LicenseListFilter filter)
+    public async Task<IActionResult> SearchAsync(LicenseListFilter filter)
     {
         var items = await _service.SearchAsync(filter);
         return Ok(items);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Result<Guid>>> CreateAsync(CreateLicenseRequest request)
+    public async Task<IActionResult> CreateAsync(CreateLicenseRequest request)
     {
         return Ok(await _service.CreateAsync(request));
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult<Result<Guid>>> UpdateAsync(UpdateLicenseRequest request, Guid id)
+    public async Task<IActionResult> UpdateAsync(UpdateLicenseRequest request, Guid id)
     {
         return Ok(await _service.UpdateAsync(request, id));
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<ActionResult<Result<Guid>>> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var itemId = await _service.DeleteAsync(id);
         return Ok(itemId);

@@ -19,14 +19,14 @@ public class DataTypesController : BaseController
     }
 
     [HttpGet]
-    public async Task<ActionResult<Result<DataTypeDetailsDto>>> GetAsync([FromQuery] DataTypeListFilter filter)
+    public async Task<IActionResult> GetAsync([FromQuery] DataTypeListFilter filter)
     {
         var items = await _service.SearchAsync(filter);
         return Ok(items);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Result<DataTypeDetailsDto>>> GetByIdAsync(Guid id)
+    public async Task<IActionResult> GetByIdAsync(Guid id)
     {
         var product = await _service.GetDetailsAsync(id);
         return Ok(product);
@@ -34,26 +34,26 @@ public class DataTypesController : BaseController
 
     [HttpPost("search")]
     [OpenApiOperation("Search DataTypes using available Filters.", "")]
-    public async Task<ActionResult<PaginatedResult<DataTypeDto>>> SearchAsync(DataTypeListFilter filter)
+    public async Task<IActionResult> SearchAsync(DataTypeListFilter filter)
     {
         var items = await _service.SearchAsync(filter);
         return Ok(items);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Result<Guid>>> CreateAsync(CreateDataTypeRequest request)
+    public async Task<IActionResult> CreateAsync(CreateDataTypeRequest request)
     {
         return Ok(await _service.CreateAsync(request));
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult<Result<Guid>>> UpdateAsync(UpdateDataTypeRequest request, Guid id)
+    public async Task<IActionResult> UpdateAsync(UpdateDataTypeRequest request, Guid id)
     {
         return Ok(await _service.UpdateAsync(request, id));
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<ActionResult<Result<Guid>>> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var itemId = await _service.DeleteAsync(id);
         return Ok(itemId);

@@ -19,14 +19,14 @@ public class CategoriesController : BaseController
     }
 
     [HttpGet]
-    public async Task<ActionResult<Result<CategoryDetailsDto>>> GetAsync([FromQuery] CategoryListFilter filter)
+    public async Task<IActionResult> GetAsync([FromQuery] CategoryListFilter filter)
     {
         var items = await _service.SearchAsync(filter);
         return Ok(items);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Result<CategoryDetailsDto>>> GetByIdAsync(Guid id)
+    public async Task<IActionResult> GetByIdAsync(Guid id)
     {
         var product = await _service.GetDetailsAsync(id);
         return Ok(product);
@@ -34,26 +34,26 @@ public class CategoriesController : BaseController
 
     [HttpPost("search")]
     [OpenApiOperation("Search Categorys using available Filters.", "")]
-    public async Task<ActionResult<PaginatedResult<CategoryDto>>> SearchAsync(CategoryListFilter filter)
+    public async Task<IActionResult> SearchAsync(CategoryListFilter filter)
     {
         var items = await _service.SearchAsync(filter);
         return Ok(items);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Result<Guid>>> CreateAsync(CreateCategoryRequest request)
+    public async Task<IActionResult> CreateAsync(CreateCategoryRequest request)
     {
         return Ok(await _service.CreateAsync(request));
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult<Result<Guid>>> UpdateAsync(UpdateCategoryRequest request, Guid id)
+    public async Task<IActionResult> UpdateAsync(UpdateCategoryRequest request, Guid id)
     {
         return Ok(await _service.UpdateAsync(request, id));
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<ActionResult<Result<Guid>>> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var itemId = await _service.DeleteAsync(id);
         return Ok(itemId);
