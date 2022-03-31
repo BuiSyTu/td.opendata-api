@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TD.OpenData.WebApi.Infrastructure.FileStorage.Models;
+namespace TD.OpenData.WebApi.Shared.DTOs.Catalog;
 
 public class PreviewData
 {
-    public JObject? Data { get; set; }
+    public List<Dictionary<string, object>>? Data { get; set; }
     public string? DataSource { get; set; }
     public MetadataCollection? Metadata { get; set; }
 }

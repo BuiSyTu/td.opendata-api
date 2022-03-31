@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace TD.OpenData.WebApi.Infrastructure.FileStorage.Models;
+namespace TD.OpenData.WebApi.Shared.DTOs.Catalog;
 
 public class MetadataCollection : ICollection<Metadata>
 {

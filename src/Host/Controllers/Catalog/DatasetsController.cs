@@ -85,11 +85,4 @@ public class DatasetsController : BaseController
         var itemId = await _service.RejectedAsync(id);
         return Ok(itemId);
     }
-
-    [HttpPatch("createTable/{id:guid}")]
-    public async Task<IActionResult> CreateTableAsync(Guid id)
-    {
-        var item = await _sqlService.CreateTableAsync(id);
-        return Ok(item);
-    }
 }

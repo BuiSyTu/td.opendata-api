@@ -20,7 +20,7 @@ public class AttachmentsController : BaseController
 
     [HttpPost]
     [DisableRequestSizeLimit]
-    public async Task<IActionResult> Post([FromForm(Name = "files")] List<IFormFile> files)
+    public async Task<IActionResult> PostAsync([FromForm(Name = "files")] List<IFormFile> files)
     {
         CreateAttachmentRequest file = new CreateAttachmentRequest() { Files = files};
         var items = await _service.CreateAsync(file);

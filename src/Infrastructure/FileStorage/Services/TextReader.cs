@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 using TD.OpenData.WebApi.Infrastructure.FileStorage.Interfaces;
-using TD.OpenData.WebApi.Infrastructure.FileStorage.Models;
+using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 
 namespace TD.OpenData.WebApi.Infrastructure.FileStorage.Services;
 

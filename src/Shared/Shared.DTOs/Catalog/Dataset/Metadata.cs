@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TD.OpenData.WebApi.Infrastructure.FileStorage.Models;
+namespace TD.OpenData.WebApi.Shared.DTOs.Catalog;
 
 public class Metadata
 {

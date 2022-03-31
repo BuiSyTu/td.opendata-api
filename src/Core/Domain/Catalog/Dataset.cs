@@ -43,7 +43,7 @@ public class Dataset : AuditableEntity, IMustHaveTenant
 
     // Loại dữ liệu
     public Guid? DataTypeId { get; set; }
-    public virtual DataType DataType { get; set; } = default!;
+    public virtual DataType? DataType { get; set; } = default!;
 
     // Lĩnh vực của dữ liệu
     public Guid? CategoryId { get; set; }
