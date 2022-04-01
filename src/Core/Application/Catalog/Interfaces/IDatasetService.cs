@@ -21,4 +21,6 @@ public interface IDatasetService : ITransientService
     Task<Result<Guid>> ApprovedAsync(Guid id);
 
     Task<Result<Guid>> RejectedAsync(Guid id);
+
+    Task SyncDataAsync(Guid id);
 }

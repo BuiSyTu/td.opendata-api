@@ -1,12 +1,6 @@
-using TD.OpenData.WebApi.Application.Catalog.Interfaces;
-using TD.OpenData.WebApi.Application.Wrapper;
-using TD.OpenData.WebApi.Domain.Constants;
-using TD.OpenData.WebApi.Infrastructure.Identity.Permissions;
-using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
 using TD.OpenData.WebApi.Shared.DTOs.Forward;
-using TD.OpenData.WebApi.Application.Forward.Interfaces;
+using TD.OpenData.WebApi.Application.Forward;
 
 namespace TD.OpenData.WebApi.Host.Controllers.Catalog;
 

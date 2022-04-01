@@ -392,4 +392,9 @@ public class RepositoryAsync : IRepositoryAsync
     {
         return _dbContext.Connection.ExecuteAsync(sql, param, transaction);
     }
+
+    public async Task<int> ExecuteSqlRawAsync(string sql, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Database.ExecuteSqlRawAsync(sql, cancellationToken);
+    }
 }

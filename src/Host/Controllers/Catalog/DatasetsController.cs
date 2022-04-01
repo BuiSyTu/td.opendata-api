@@ -1,34 +1,21 @@
 using TD.OpenData.WebApi.Application.Catalog.Interfaces;
-using TD.OpenData.WebApi.Application.Wrapper;
-using TD.OpenData.WebApi.Domain.Constants;
-using TD.OpenData.WebApi.Infrastructure.Identity.Permissions;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
-using TD.OpenData.WebApi.Application.Forward.Interfaces;
-using TD.OpenData.WebApi.Infrastructure.FileStorage.Interfaces;
+using TD.OpenData.WebApi.Application.Forward;
 using TD.OpenData.WebApi.Application.Common.Interfaces;
+using TD.OpenData.WebApi.Application.SyncData.Interfaces;
 
 namespace TD.OpenData.WebApi.Host.Controllers.Catalog;
 
 [ApiConventionType(typeof(FSHApiConventions))]
 public class DatasetsController : BaseController
 {
-    private readonly IRepositoryAsync _repository;
     private readonly IDatasetService _service;
-    private readonly IForwardService _forwardService;
-    private readonly ISqlService _sqlService;
 
-    public DatasetsController(
-        IRepositoryAsync repository,
-        IDatasetService service,
-        IForwardService forwardService,
-        ISqlService sqlService)
+    public DatasetsController(IDatasetService service)
     {
-        _repository = repository;
         _service = service;
-        _forwardService = forwardService;
-        _sqlService = sqlService;
     }
 
     [HttpGet]
@@ -89,7 +76,7 @@ public class DatasetsController : BaseController
     [HttpPatch("syncData/{id:guid}")]
     public async Task<IActionResult> SyncAsync(Guid id)
     {
-        await _sqlService.SyncDataAsync(id);
+        await _service.SyncDataAsync(id);
         return NoContent();
     }
 }
