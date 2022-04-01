@@ -8,7 +8,6 @@ public interface IOrganizationService : ITransientService
 {
     Task<Result<OrganizationDetailsDto>> GetDetailsAsync(Guid id);
 
-
     Task<PaginatedResult<OrganizationDto>> SearchAsync(OrganizationListFilter filter);
 
     Task<Result<Guid>> CreateAsync(CreateOrganizationRequest request);

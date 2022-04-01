@@ -23,7 +23,6 @@ public class CustomField : AuditableEntity, IMustHaveTenant
 
         if (key != null && !Key.NullToString().Equals(key)) Key = key;
         if (value != null && !Value.NullToString().Equals(value)) Value = value;
-        
         return this;
     }
 }

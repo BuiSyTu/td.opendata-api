@@ -19,9 +19,9 @@ public class UsersController : ControllerBase
         _userService = userService;
     }
 
+    // [Authorize(Roles = "admin")]
+    // [Authorize(Policy = "admin")]
     [HttpGet]
-    //[Authorize(Roles = "admin")]
-    //[Authorize(Policy = "admin")]
     [Authorize(Policy = "Write")]
     public async Task<ActionResult<Result<List<UserDetailsDto>>>> GetAllAsync()
     {

@@ -9,6 +9,5 @@ namespace TD.OpenData.WebApi.Infrastructure.FileStorage.Interfaces;
 
 public interface IExcelReader : ITransientService
 {
-    string? GetJsonData(Stream? stream, int? sheetNumber);
     string? GetJsonData(Stream? stream, string? sheetName);
 }

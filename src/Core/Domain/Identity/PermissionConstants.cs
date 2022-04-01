@@ -45,7 +45,6 @@ public partial class PermissionConstants
         public const string Search = "Permissions.Users.Search";
     }
 
-
     [DisplayName("Opendatas")]
     [Description("Opendatas Permissions")]
     public static class Opendata

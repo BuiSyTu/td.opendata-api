@@ -12,11 +12,7 @@ public class License : AuditableEntity, IMustHaveTenant
     public bool? IsActive { get;  set; }
     public string? Tenant { get; set; }
 
-    public virtual ICollection<Dataset> Datasets { get; set; }
-
-    public License()
-    {
-    }
+    public virtual ICollection<Dataset>? Datasets { get; set; }
 
     public License Update(string? name, string? description, string? code, bool? isActive)
     {

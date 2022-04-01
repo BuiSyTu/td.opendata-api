@@ -44,8 +44,6 @@ public class OrganizationService : IOrganizationService
         return await Result<Guid>.SuccessAsync(id);
     }
 
-
-
     public async Task<Result<OrganizationDetailsDto>> GetDetailsAsync(Guid id)
     {
         var item = await _repository.GetByIdAsync<Organization, OrganizationDetailsDto>(id);

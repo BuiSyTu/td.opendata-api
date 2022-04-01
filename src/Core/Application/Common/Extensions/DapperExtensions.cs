@@ -19,13 +19,13 @@ public static class DapperExtensions
         const int MaxBatchSize = 1000;
         const int MaxParameterSize = 2000;
 
-        var batchSize = Math.Min((int)Math.Ceiling((double)MaxParameterSize / dataFunc.Keys.Count), MaxBatchSize);
-        var numberOfBatches = (int)Math.Ceiling((double)items.Count / batchSize);
+        int batchSize = Math.Min((int)Math.Ceiling((double)MaxParameterSize / dataFunc.Keys.Count), MaxBatchSize);
+        int numberOfBatches = (int)Math.Ceiling((double)items.Count / batchSize);
         var columnNames = dataFunc.Keys;
-        var insertSql = $"INSERT INTO {tableName} ({string.Join(", ", columnNames.Select(e => $"[{e}]"))}) VALUES ";
+        string? insertSql = $"INSERT INTO {tableName} ({string.Join(", ", columnNames.Select(e => $"[{e}]"))}) VALUES ";
         var sqlToExecute = new List<Tuple<string, DynamicParameters>>();
 
-        for (var i = 0; i < numberOfBatches; i++)
+        for (int i = 0; i < numberOfBatches; i++)
         {
             var dataToInsert = items.Skip(i * batchSize)
                 .Take(batchSize);
@@ -56,12 +56,12 @@ public static class DapperExtensions
         DynamicParameters parameters,
         Dictionary<string, Func<T, object>> dataFunc)
     {
-        var paramTemplateFunc = new Func<Guid, string>(guid => $"@p{guid.ToString().Replace("-", "")}");
+        var paramTemplateFunc = new Func<Guid, string>(guid => $"@p{guid.ToString().Replace("-", string.Empty)}");
         var paramList = new List<string>();
 
         foreach (var key in dataFunc)
         {
-            var paramName = paramTemplateFunc(Guid.NewGuid());
+            string? paramName = paramTemplateFunc(Guid.NewGuid());
             parameters.Add(paramName, key.Value(entity));
             paramList.Add(paramName);
         }

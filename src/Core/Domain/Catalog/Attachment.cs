@@ -11,7 +11,10 @@ public class Attachment : AuditableEntity, IMustHaveTenant
     public string Url { get; set; }
     public string? Tenant { get; set; }
 
-    public Attachment()
+    public Attachment(string name, string type, string url)
     {
+        Name = name;
+        Type = type;
+        Url = url;
     }
 }

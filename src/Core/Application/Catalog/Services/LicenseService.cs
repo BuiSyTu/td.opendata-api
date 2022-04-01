@@ -44,8 +44,6 @@ public class LicenseService : ILicenseService
         return await Result<Guid>.SuccessAsync(id);
     }
 
-
-
     public async Task<Result<LicenseDetailsDto>> GetDetailsAsync(Guid id)
     {
         var item = await _repository.GetByIdAsync<License, LicenseDetailsDto>(id);

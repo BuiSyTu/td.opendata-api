@@ -34,6 +34,7 @@ public class SqlService : ISqlService
     {
         string? tableName = $"tandanjsc_{Guid.NewGuid().ToString().Replace("-", "_")}";
 
+#pragma warning disable SA1513 // Closing brace should be followed by blank line
         string? sql = $@"IF NOT EXISTS
                     (SELECT[name]
                         FROM sys.tables
@@ -44,10 +45,11 @@ public class SqlService : ISqlService
                         {string.Join(", ", metadatas
                             .Where(metadata => metadata.Data.ToLower() != "id")
                             .Select(metadata => $"{metadata.Data} nvarchar(MAX)")
-                            .ToArray())},
-                        PRIMARY KEY (ID)
+                            .ToArray())
+                        }, PRIMARY KEY (ID)
                     )
-                ";
+        ";
+#pragma warning restore SA1513 // Closing brace should be followed by blank line
 
         try
         {
@@ -92,7 +94,7 @@ public class SqlService : ISqlService
         });
     }
 
-    public async Task SyncData(Guid datasetId)
+    public async Task SyncDataAsync(Guid datasetId)
     {
 #pragma warning disable CS8603 // Possible null reference return.
         var includes = new Expression<Func<Dataset, object>>[]
@@ -104,28 +106,33 @@ public class SqlService : ISqlService
 
         if (dataset.DataType.Code.ToLower() == "webapi")
         {
-            if (string.IsNullOrEmpty(dataset.Metadata))
-            {
-                // Create table
-                string? dataText = await _forwardService.ForwardDataset(dataset);
-                var previewData = dataText.ToPreviewData(dataset.DatasetAPIConfig.DataKey);
-                string? tableName = CreateTableSql(previewData.Metadata);
+            // Create table
+            string? dataText = await _forwardService.ForwardDataset(dataset);
+            var previewData = dataText.ToPreviewData(dataset.DatasetAPIConfig.DataKey);
+            string? tableName = CreateTableSql(previewData.Metadata);
 
-                // Save table name to dataset
-                dataset.TableName = tableName;
-                await _repositoryAsync.SaveChangesAsync();
+            // Save table name to dataset
+            dataset.TableName = tableName;
+            await _repositoryAsync.SaveChangesAsync();
 
-                // Import data
-                ImportData(tableName, previewData.Metadata, previewData.Data);
-            }
+            // Import data
+            ImportData(tableName, previewData.Metadata, previewData.Data);
         }
 
         if (dataset.DataType.Code.ToLower() == "excel")
         {
-            if (string.IsNullOrEmpty(dataset.Metadata))
-            {
+            byte[] fileBytes = await File.ReadAllBytesAsync(dataset.DatasetFileConfig.FileUrl);
+            string? dataText = _excelReader.GetJsonData(new MemoryStream(fileBytes), dataset.DatasetFileConfig.SheetName);
 
-            }
+            var previewData = dataText.ToPreviewData(dataset.DatasetAPIConfig.DataKey);
+            string? tableName = CreateTableSql(previewData.Metadata);
+
+            // Save table name to dataset
+            dataset.TableName = tableName;
+            await _repositoryAsync.SaveChangesAsync();
+
+            // Import data
+            ImportData(tableName, previewData.Metadata, previewData.Data);
         }
     }
 }

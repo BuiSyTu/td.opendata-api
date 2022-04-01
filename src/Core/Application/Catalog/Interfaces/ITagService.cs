@@ -8,7 +8,6 @@ public interface ITagService : ITransientService
 {
     Task<Result<TagDetailsDto>> GetDetailsAsync(Guid id);
 
-
     Task<PaginatedResult<TagDto>> SearchAsync(TagListFilter filter);
 
     Task<Result<Guid>> CreateAsync(CreateTagRequest request);

@@ -1,4 +1,5 @@
-﻿using TD.OpenData.WebApi.Domain.Common;
+﻿using Newtonsoft.Json;
+using TD.OpenData.WebApi.Domain.Common;
 using TD.OpenData.WebApi.Domain.Common.Contracts;
 using TD.OpenData.WebApi.Domain.Contracts;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
@@ -105,5 +106,11 @@ public class Dataset : AuditableEntity, IMustHaveTenant
 
         if (request.TableName != null && !TableName.NullToString().Equals(request.TableName)) TableName = request.TableName;
         return this;
+    }
+
+    public MetadataCollection ToMetadataCollection()
+    {
+        var metadatas = JsonConvert.DeserializeObject<List<Metadata>>(Metadata);
+        return new MetadataCollection(metadatas);
     }
 }

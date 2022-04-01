@@ -10,5 +10,5 @@ namespace TD.OpenData.WebApi.Infrastructure.FileStorage.Interfaces;
 
 public interface ISqlService : ITransientService
 {
-    Task SyncData(Guid datasetId);
+    Task SyncDataAsync(Guid datasetId);
 }

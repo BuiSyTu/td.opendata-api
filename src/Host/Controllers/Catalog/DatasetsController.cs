@@ -85,4 +85,11 @@ public class DatasetsController : BaseController
         var itemId = await _service.RejectedAsync(id);
         return Ok(itemId);
     }
+
+    [HttpPatch("syncData/{id:guid}")]
+    public async Task<IActionResult> SyncAsync(Guid id)
+    {
+        await _sqlService.SyncDataAsync(id);
+        return NoContent();
+    }
 }

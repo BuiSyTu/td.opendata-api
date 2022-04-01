@@ -44,8 +44,6 @@ public class ProviderTypeService : IProviderTypeService
         return await Result<Guid>.SuccessAsync(id);
     }
 
-
-
     public async Task<Result<ProviderTypeDetailsDto>> GetDetailsAsync(Guid id)
     {
         var item = await _repository.GetByIdAsync<ProviderType, ProviderTypeDetailsDto>(id);

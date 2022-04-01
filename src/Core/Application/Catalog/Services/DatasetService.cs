@@ -11,6 +11,7 @@ using Mapster;
 using TD.OpenData.WebApi.Domain.Common.Contracts;
 using System.Linq.Expressions;
 using TD.OpenData.WebApi.Application.Forward.Interfaces;
+using TD.OpenData.WebApi.Domain.Catalog.Events;
 
 namespace TD.OpenData.WebApi.Application.Catalog.Services;
 
@@ -38,7 +39,7 @@ public class DatasetService : IDatasetService
         var item = await _repository.GetByIdAsync<Dataset>(id);
         if (item == null) throw new EntityNotFoundException(string.Format(_localizer["dataset.notfound"], id));
 
-        item.State = 1;
+        item.DomainEvents.Add(new DatasetApproveEvent(item));
         await _repository.UpdateAsync(item);
         await _repository.SaveChangesAsync();
         return await Result<Guid>.SuccessAsync(id);
@@ -94,8 +95,6 @@ public class DatasetService : IDatasetService
 
         await _repository.SaveChangesAsync();
 
-        string jobId = _jobService.Enqueue<IDatasetJob>(x => x.DatasetWebAPIAsync(itemDatasetId));
-
         return await Result<Guid>.SuccessAsync(itemDatasetId);
     }
 
@@ -146,7 +145,7 @@ public class DatasetService : IDatasetService
         var item = await _repository.GetByIdAsync<Dataset>(id);
         if (item == null) throw new EntityNotFoundException(string.Format(_localizer["dataset.notfound"], id));
 
-        item.State = 2;
+        item.DomainEvents.Add(new DatasetRejectEvent(item));
         await _repository.UpdateAsync(item);
         await _repository.SaveChangesAsync();
         return await Result<Guid>.SuccessAsync(id);

@@ -21,13 +21,12 @@ public class CategoryService : ICategoryService
     private readonly IJobService _jobService;
     private readonly IFileStorageService _file;
 
-
     public CategoryService(IRepositoryAsync repository, IStringLocalizer<CategoryService> localizer, IJobService jobService, IFileStorageService file)
     {
         _repository = repository;
         _localizer = localizer;
         _jobService = jobService;
-        _file  = file;
+        _file = file;
     }
 
     public async Task<Result<Guid>> CreateAsync(CreateCategoryRequest request)
