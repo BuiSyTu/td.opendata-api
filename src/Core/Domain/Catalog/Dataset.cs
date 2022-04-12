@@ -23,11 +23,16 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     // Từ khóa dữ liệu
     public string? Tags { get; set; }
 
-    // Trạng thái của dữ liệu
+    // Trạng thái xét duyệt của dữ liệu
     // 0 = chưa duyệt
     // 1 = đã duyệt
     // 2 = bị từ chối
-    public int? State { get;  set; }
+    public int? ApproveState { get;  set; }
+
+    // Đã đồng bộ hay chưa
+    // True: Đã đồng bộ
+    // False: Chưa đồng bộ
+    public bool? IsSynced { get; set; }
 
     // Public ra cổng của công dân hay không
     // True: public
@@ -87,7 +92,8 @@ public class Dataset : AuditableEntity, IMustHaveTenant
         if (request.Description != null && !Description.NullToString().Equals(request.Description)) Description = request.Description;
         if (request.Code != null && !Code.NullToString().Equals(request.Code)) Code = request.Code;
         if (request.Tags != null && !Tags.NullToString().Equals(request.Tags)) Tags = request.Tags;
-        if (request.State != null && !State.NullToString().Equals(request.State)) State = request.State;
+        if (request.ApproveState != null && !ApproveState.NullToString().Equals(request.ApproveState)) ApproveState = request.ApproveState;
+        if (request.IsSynced != null && IsSynced != request.IsSynced) IsSynced = request.IsSynced;
         if (request.Visibility != null && Visibility != request.Visibility) Visibility = request.Visibility;
 
         if (request.LicenseId != Guid.Empty && !LicenseId.NullToString().Equals(request.LicenseId)) LicenseId = request.LicenseId;

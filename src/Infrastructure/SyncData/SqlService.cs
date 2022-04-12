@@ -3,9 +3,8 @@ using System;
 using System.Linq.Expressions;
 using TD.OpenData.WebApi.Application.Common.Interfaces;
 using TD.OpenData.WebApi.Application.SyncData.Interfaces;
-using TD.OpenData.WebApi.Domain.Catalog;
-using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
+using TD.OpenData.WebApi.Shared.DTOs.Filters;
 
 namespace TD.OpenData.WebApi.Infrastructure.SyncData;
 
@@ -52,7 +51,14 @@ public class SqlService : ISqlService
         }
     }
 
-    public Task ImportDataAsync(string? tableName, MetadataCollection metadatas, List<Dictionary<string, object>> data)
+    public async Task<object> GetRaw(Guid id, PaginationFilter filter)
+    {
+        string sql = @"SELECT * FROM [OpenDataWebAPIApplication].[dbo].[tandanjsc_198d7b02_c63c_4bdb_911b_0796f224b06a]";
+        var raw = await _repositoryAsync.QueryAsync<object>(sql);
+        return raw;
+    }
+
+    public async Task ImportDataAsync(string? tableName, MetadataCollection metadatas, List<Dictionary<string, object>> data)
     {
         string?[]? columns = metadatas
             .Where(metadata => metadata.Data.ToLower() != "id")
@@ -60,7 +66,7 @@ public class SqlService : ISqlService
             .ToArray();
         if (columns is null) throw new Exception("Column is not null herer");
 
-        data.ForEach(async dictionary =>
+        foreach (var dictionary in data)
         {
             string?[]? values = columns
                 .Select(columnName => $"N'{dictionary[columnName]}'")
@@ -79,7 +85,6 @@ public class SqlService : ISqlService
             {
                 Console.Error.WriteLine(ex.ToString());
             }
-        });
-        return Task.CompletedTask;
+        }
     }
 }

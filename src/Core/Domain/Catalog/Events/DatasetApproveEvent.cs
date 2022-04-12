@@ -12,7 +12,7 @@ public class DatasetApproveEvent : DomainEvent
     public DatasetApproveEvent(Dataset dataset)
     {
         Dataset = dataset;
-        Dataset.State = 1;
+        Dataset.ApproveState = 1;
     }
 
     public Dataset Dataset { get; }

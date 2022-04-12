@@ -9,7 +9,7 @@ public class DatasetListFilter : PaginationFilter
     public Guid? DataTypeId { get; set; }
     public Guid? CategoryId { get; set; }
     public Guid? ProviderTypeId { get; set; }
-    public int? State { get; set; }
+    public int? ApproveState { get; set; }
     public bool? Visibility { get; set; }
 
 }

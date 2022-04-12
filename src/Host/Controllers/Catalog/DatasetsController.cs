@@ -5,6 +5,7 @@ using NSwag.Annotations;
 using TD.OpenData.WebApi.Application.Forward;
 using TD.OpenData.WebApi.Application.Common.Interfaces;
 using TD.OpenData.WebApi.Application.SyncData.Interfaces;
+using TD.OpenData.WebApi.Shared.DTOs.Filters;
 
 namespace TD.OpenData.WebApi.Host.Controllers.Catalog;
 
@@ -16,6 +17,15 @@ public class DatasetsController : BaseController
     public DatasetsController(IDatasetService service)
     {
         _service = service;
+    }
+
+    [HttpGet("{id:guid}/data")]
+    public async Task<IActionResult> GetRawAsync(Guid id, string? orderBy = null, int skip = 0, int top = 20)
+    {
+        if (top > 1000) top = 1000;
+
+        object? items = await _service.GetDataAsync(id, orderBy, skip, top);
+        return Ok(items);
     }
 
     [HttpGet]

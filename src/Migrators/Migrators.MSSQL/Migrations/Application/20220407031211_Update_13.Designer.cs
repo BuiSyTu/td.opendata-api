@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 
@@ -11,9 +12,10 @@ using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 namespace Migrators.MSSQL.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220407031211_Update_13")]
+    partial class Update_13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -854,9 +856,6 @@ namespace Migrators.MSSQL.Migrations.Application
 
                     b.Property<string>("Tenant")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("View")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

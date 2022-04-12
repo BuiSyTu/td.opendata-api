@@ -360,7 +360,7 @@ public class RepositoryAsync : IRepositoryAsync
 
     // Dapper
     public async Task<IReadOnlyList<T>> QueryAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
-    where T : BaseEntity =>
+        =>
         (await _dbContext.Connection.QueryAsync<T>(sql, param, transaction))
             .AsList();
 

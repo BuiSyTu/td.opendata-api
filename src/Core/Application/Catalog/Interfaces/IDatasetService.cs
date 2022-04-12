@@ -1,12 +1,13 @@
 using TD.OpenData.WebApi.Application.Common.Interfaces;
 using TD.OpenData.WebApi.Application.Wrapper;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
+using TD.OpenData.WebApi.Shared.DTOs.Filters;
 
 namespace TD.OpenData.WebApi.Application.Catalog.Interfaces;
 
 public interface IDatasetService : ITransientService
 {
-    Task<object> GetDataAsync(Guid id);
+    Task<object> GetDataAsync(Guid id, string orderBy, int skip, int top);
 
     Task<Result<DatasetDetailsDto>> GetDetailsAsync(Guid id);
 

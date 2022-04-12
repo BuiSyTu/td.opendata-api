@@ -14,6 +14,7 @@ using TD.OpenData.WebApi.Application.Forward;
 using TD.OpenData.WebApi.Domain.Catalog.Events;
 using TD.OpenData.WebApi.Application.SyncData.Interfaces;
 using TD.OpenData.WebApi.Infrastructure.SyncData;
+using TD.OpenData.WebApi.Shared.DTOs.Filters;
 
 namespace TD.OpenData.WebApi.Infrastructure.Catalog.Services;
 
@@ -114,9 +115,18 @@ public class DatasetService : IDatasetService
         return await Result<Guid>.SuccessAsync(id);
     }
 
-    public Task<object> GetDataAsync(Guid id)
+    public async Task<object> GetDataAsync(Guid id, string? orderBy, int skip, int top)
     {
-        throw new NotImplementedException();
+        var dataset = await _repository.GetByIdAsync<Dataset>(id);
+
+        string sql =
+        $@"SELECT * FROM {dataset.TableName}
+            ORDER BY {(string.IsNullOrEmpty(orderBy) ? "ID" : orderBy)}
+            OFFSET {skip} ROWS FETCH NEXT {top} ROWS ONLY
+        ";
+
+        var result = await _repository.QueryAsync<object>(sql);
+        return result;
     }
 
     public async Task<Result<DatasetDetailsDto>> GetDetailsAsync(Guid id)
@@ -152,7 +162,7 @@ public class DatasetService : IDatasetService
         filters.Add(filter.OrganizationId.HasValue, x => x.OrganizationId.Equals(filter.OrganizationId!.Value));
         filters.Add(filter.DataTypeId.HasValue, x => x.DataTypeId.Equals(filter.DataTypeId!.Value));
         filters.Add(filter.ProviderTypeId.HasValue, x => x.ProviderTypeId.Equals(filter.ProviderTypeId!.Value));
-        filters.Add(filter.State.HasValue, x => x.State == filter.State!.Value);
+        filters.Add(filter.ApproveState.HasValue, x => x.ApproveState == filter.ApproveState!.Value);
         filters.Add(filter.Visibility.HasValue, x => x.Visibility == filter.Visibility!.Value);
 
         var specification = new PaginationSpecification<Dataset>
@@ -200,7 +210,7 @@ public class DatasetService : IDatasetService
             byte[] fileBytes = await File.ReadAllBytesAsync(dataset.DatasetFileConfig.FileUrl);
             string? dataText = _excelReader.GetJsonData(new MemoryStream(fileBytes), dataset.DatasetFileConfig.SheetName);
 
-            var previewData = dataText.ToPreviewData(dataset.DatasetAPIConfig.DataKey);
+            var previewData = dataText.ToPreviewData(dataset.DatasetFileConfig.SheetName);
             string? tableName = await _sqlService.CreateTableSqlAsync(previewData.Metadata);
 
             // Save table name to dataset

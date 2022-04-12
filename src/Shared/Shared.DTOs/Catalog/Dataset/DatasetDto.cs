@@ -9,7 +9,8 @@ public class DatasetDto : IDto
     public string? Code { get; set; }
     public string? Tags { get; set; }
     public bool? Visibility { get; set; }
-    public int? State { get; set; }
+    public int? ApproveState { get; set; }
+    public bool? IsSynced { get; set; }
     public Guid? OrganizationId { get; set; }
     public OrganizationDto? Organization { get; set; }
 }

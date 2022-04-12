@@ -9,7 +9,9 @@ public class DatasetDetailsDto : IDto
     public string? Code { get; set; }
     public string? Tags { get; set; }
     public bool? Visibility { get; set; }
-    public int? State { get; set; }
+    public int? ApproveState { get; set; }
+    public bool? IsSynced { get; set; }
+
     public Guid? LicenseId { get; set; }
     public LicenseDto? License { get; set; }
     public string? Author { get; set; }

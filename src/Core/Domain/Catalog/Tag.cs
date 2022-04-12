@@ -8,6 +8,8 @@ public class Tag : AuditableEntity, IMustHaveTenant
 {
     public string? Name { get;  set; }
 
+    public int View { get; set; }
+
     public string? Tenant { get; set; }
 
     public Tag()

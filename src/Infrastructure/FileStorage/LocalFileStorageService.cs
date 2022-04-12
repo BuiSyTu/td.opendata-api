@@ -130,7 +130,7 @@ public class LocalFileStorageService : IFileStorageService
                 {
                     Name = fileName,
                     Type = Path.GetExtension(formFile.FileName),
-                    Url = "{server_url}/" + dbPath
+                    Url = dbPath
                 };
                 listFile.Add(attachment);
             }
