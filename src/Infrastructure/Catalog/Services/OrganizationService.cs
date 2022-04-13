@@ -15,13 +15,11 @@ public class OrganizationService : IOrganizationService
 {
     private readonly IStringLocalizer<OrganizationService> _localizer;
     private readonly IRepositoryAsync _repository;
-    private readonly IJobService _jobService;
 
-    public OrganizationService(IRepositoryAsync repository, IStringLocalizer<OrganizationService> localizer, IJobService jobService)
+    public OrganizationService(IRepositoryAsync repository, IStringLocalizer<OrganizationService> localizer)
     {
         _repository = repository;
         _localizer = localizer;
-        _jobService = jobService;
     }
 
     public async Task<Result<Guid>> CreateAsync(CreateOrganizationRequest request)

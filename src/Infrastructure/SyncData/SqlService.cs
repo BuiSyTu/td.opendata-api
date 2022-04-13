@@ -3,6 +3,7 @@ using System;
 using System.Linq.Expressions;
 using TD.OpenData.WebApi.Application.Common.Interfaces;
 using TD.OpenData.WebApi.Application.SyncData.Interfaces;
+using TD.OpenData.WebApi.Domain.Catalog;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using TD.OpenData.WebApi.Shared.DTOs.Filters;
 
@@ -10,11 +11,11 @@ namespace TD.OpenData.WebApi.Infrastructure.SyncData;
 
 public class SqlService : ISqlService
 {
-    private readonly IRepositoryAsync _repositoryAsync;
+    private readonly IRepositoryAsync _repository;
 
-    public SqlService(IRepositoryAsync repositoryAsync)
+    public SqlService(IRepositoryAsync repository)
     {
-        _repositoryAsync = repositoryAsync;
+        _repository = repository;
     }
 
     public async Task<string?> CreateTableSqlAsync(MetadataCollection metadatas)
@@ -40,7 +41,7 @@ public class SqlService : ISqlService
 
         try
         {
-            await _repositoryAsync.ExecuteSqlRawAsync(sql);
+            await _repository.ExecuteSqlRawAsync(sql);
             Console.WriteLine($"Create table tandanjsc_{tableName} successfully");
             return tableName;
         }
@@ -51,10 +52,18 @@ public class SqlService : ISqlService
         }
     }
 
-    public async Task<object> GetRaw(Guid id, PaginationFilter filter)
+    public async Task<object?> GetRaw(Guid id, PaginationFilter filter)
     {
-        string sql = @"SELECT * FROM [OpenDataWebAPIApplication].[dbo].[tandanjsc_198d7b02_c63c_4bdb_911b_0796f224b06a]";
-        var raw = await _repositoryAsync.QueryAsync<object>(sql);
+        var dataset = await _repository.GetByIdAsync<Dataset>(id);
+        string? tableName = dataset.TableName;
+
+        if (tableName is null) return null;
+
+        string sql = $@"SELECT * FROM [OpenDataWebAPIApplication].[dbo].[{tableName}]
+            ORDER BY Id DESC
+            OFFSET ({(filter.PageNumber - 1) * filter.PageSize}) ROWS FETCH NEXT ({filter.PageSize}) ROWS ONLY
+        ";
+        var raw = await _repository.QueryAsync<object>(sql);
         return raw;
     }
 
@@ -78,7 +87,7 @@ public class SqlService : ISqlService
 
             try
             {
-                _ = await _repositoryAsync.ExecuteSqlRawAsync(sql);
+                _ = await _repository.ExecuteSqlRawAsync(sql);
                 Console.WriteLine($"Create table tandanjsc_{tableName} successfully");
             }
             catch (Exception ex)

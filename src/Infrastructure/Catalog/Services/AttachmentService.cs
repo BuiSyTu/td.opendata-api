@@ -16,14 +16,12 @@ public class AttachmentService : IAttachmentService
 {
     private readonly IStringLocalizer<AttachmentService> _localizer;
     private readonly IRepositoryAsync _repository;
-    private readonly IJobService _jobService;
     private readonly IFileStorageService _file;
 
-    public AttachmentService(IRepositoryAsync repository, IStringLocalizer<AttachmentService> localizer, IJobService jobService, IFileStorageService file)
+    public AttachmentService(IRepositoryAsync repository, IStringLocalizer<AttachmentService> localizer, IFileStorageService file)
     {
         _repository = repository;
         _localizer = localizer;
-        _jobService = jobService;
         _file = file;
     }
 

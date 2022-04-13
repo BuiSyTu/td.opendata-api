@@ -7,6 +7,7 @@ using TD.OpenData.WebApi.Domain.Catalog;
 using TD.OpenData.WebApi.Domain.Dashboard;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using Microsoft.Extensions.Localization;
+using Hangfire;
 
 namespace TD.OpenData.WebApi.Infrastructure.Catalog.Services;
 
@@ -14,13 +15,11 @@ public class BrandService : IBrandService
 {
     private readonly IStringLocalizer<BrandService> _localizer;
     private readonly IRepositoryAsync _repository;
-    private readonly IJobService _jobService;
 
-    public BrandService(IRepositoryAsync repository, IStringLocalizer<BrandService> localizer, IJobService jobService)
+    public BrandService(IRepositoryAsync repository, IStringLocalizer<BrandService> localizer)
     {
         _repository = repository;
         _localizer = localizer;
-        _jobService = jobService;
     }
 
     public async Task<Result<Guid>> CreateBrandAsync(CreateBrandRequest request)
@@ -72,13 +71,13 @@ public class BrandService : IBrandService
 
     public Task<Result<string>> GenerateRandomBrandAsync(GenerateRandomBrandRequest request)
     {
-        string jobId = _jobService.Enqueue<IBrandGeneratorJob>(x => x.GenerateAsync(request.NSeed));
+        string jobId = BackgroundJob.Enqueue<IBrandGeneratorJob>(x => x.GenerateAsync(request.NSeed));
         return Result<string>.SuccessAsync(jobId);
     }
 
     public Task<Result<string>> DeleteRandomBrandAsync()
     {
-        string jobId = _jobService.Schedule<IBrandGeneratorJob>(x => x.CleanAsync(), TimeSpan.FromSeconds(5));
+        string jobId = BackgroundJob.Schedule<IBrandGeneratorJob>(x => x.CleanAsync(), TimeSpan.FromSeconds(5));
         return Result<string>.SuccessAsync(jobId);
     }
 }

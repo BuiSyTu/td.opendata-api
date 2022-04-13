@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
+using Hangfire;
 
 namespace TD.OpenData.WebApi.Infrastructure.Identity.Services;
 
@@ -27,7 +28,6 @@ public class IdentityService : IIdentityService
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly IJobService _jobService;
     private readonly IMailService _mailService;
     private readonly MailSettings _mailSettings;
     private readonly IStringLocalizer<IdentityService> _localizer;
@@ -39,7 +39,6 @@ public class IdentityService : IIdentityService
         SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
-        IJobService jobService,
         IMailService mailService,
         IOptions<MailSettings> mailSettings,
         IStringLocalizer<IdentityService> localizer,
@@ -50,7 +49,6 @@ public class IdentityService : IIdentityService
         _signInManager = signInManager;
         _userManager = userManager;
         _roleManager = roleManager;
-        _jobService = jobService;
         _mailService = mailService;
         _mailSettings = mailSettings.Value;
         _localizer = localizer;
@@ -191,7 +189,7 @@ public class IdentityService : IIdentityService
                 new List<string> { user.Email },
                 _localizer["Confirm Registration"],
                 _templateService.GenerateEmailConfirmationMail(user.UserName ?? "User", user.Email, emailVerificationUri));
-            _jobService.Enqueue(() => _mailService.SendAsync(mailRequest));
+            BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
             messages.Add(_localizer[$"Please check {user.Email} to verify your account!"]);
         }
 
@@ -263,7 +261,7 @@ public class IdentityService : IIdentityService
             new List<string> { request.Email },
             _localizer["Reset Password"],
             _localizer[$"Your Password Reset Token is '{code}'. You can reset your password using the {endpointUri} Endpoint."]);
-        _jobService.Enqueue(() => _mailService.SendAsync(mailRequest));
+        BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
         return await Result.SuccessAsync(_localizer["Password Reset Mail has been sent to your authorized Email."]);
     }
 

@@ -13,5 +13,5 @@ public interface ISqlService : ITransientService
 {
     Task<string?> CreateTableSqlAsync(MetadataCollection metadatas);
     Task ImportDataAsync(string? tableName, MetadataCollection metadatas, List<Dictionary<string, object>> data);
-    Task<object> GetRaw(Guid id, PaginationFilter filter);
+    Task<object?> GetRaw(Guid id, PaginationFilter filter);
 }

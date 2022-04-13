@@ -15,13 +15,11 @@ public class TagService : ITagService
 {
     private readonly IStringLocalizer<TagService> _localizer;
     private readonly IRepositoryAsync _repository;
-    private readonly IJobService _jobService;
 
-    public TagService(IRepositoryAsync repository, IStringLocalizer<TagService> localizer, IJobService jobService)
+    public TagService(IRepositoryAsync repository, IStringLocalizer<TagService> localizer)
     {
         _repository = repository;
         _localizer = localizer;
-        _jobService = jobService;
     }
 
     public async Task<Result<Guid>> CreateAsync(CreateTagRequest request)

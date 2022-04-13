@@ -18,14 +18,12 @@ public class CategoryService : ICategoryService
 {
     private readonly IStringLocalizer<CategoryService> _localizer;
     private readonly IRepositoryAsync _repository;
-    private readonly IJobService _jobService;
     private readonly IFileStorageService _file;
 
-    public CategoryService(IRepositoryAsync repository, IStringLocalizer<CategoryService> localizer, IJobService jobService, IFileStorageService file)
+    public CategoryService(IRepositoryAsync repository, IStringLocalizer<CategoryService> localizer, IFileStorageService file)
     {
         _repository = repository;
         _localizer = localizer;
-        _jobService = jobService;
         _file = file;
     }
 

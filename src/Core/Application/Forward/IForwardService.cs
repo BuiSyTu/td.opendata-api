@@ -6,6 +6,7 @@ namespace TD.OpenData.WebApi.Application.Forward;
 
 public interface IForwardService : ITransientService
 {
-    public Task<string?> ForwardAxios(AxiosConfig axiosConfig);
-    public Task<string?> ForwardDataset(Dataset dataset);
+    Task<string?> ForwardAxios(AxiosConfig axiosConfig);
+    Task<string?> ForwardDataset(Dataset dataset);
+    Task<string?> ForwardDatasetAPIConfig(DatasetAPIConfig config);
 }

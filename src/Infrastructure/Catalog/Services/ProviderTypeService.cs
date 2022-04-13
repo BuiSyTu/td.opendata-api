@@ -15,9 +15,8 @@ public class ProviderTypeService : IProviderTypeService
 {
     private readonly IStringLocalizer<ProviderTypeService> _localizer;
     private readonly IRepositoryAsync _repository;
-    private readonly IJobService _jobService;
 
-    public ProviderTypeService(IRepositoryAsync repository, IStringLocalizer<ProviderTypeService> localizer, IJobService jobService)
+    public ProviderTypeService(IRepositoryAsync repository, IStringLocalizer<ProviderTypeService> localizer)
     {
         _repository = repository;
         _localizer = localizer;

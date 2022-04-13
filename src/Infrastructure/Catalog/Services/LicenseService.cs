@@ -15,9 +15,8 @@ public class LicenseService : ILicenseService
 {
     private readonly IStringLocalizer<LicenseService> _localizer;
     private readonly IRepositoryAsync _repository;
-    private readonly IJobService _jobService;
 
-    public LicenseService(IRepositoryAsync repository, IStringLocalizer<LicenseService> localizer, IJobService jobService)
+    public LicenseService(IRepositoryAsync repository, IStringLocalizer<LicenseService> localizer)
     {
         _repository = repository;
         _localizer = localizer;

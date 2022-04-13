@@ -15,6 +15,7 @@ using TD.OpenData.WebApi.Domain.Catalog.Events;
 using TD.OpenData.WebApi.Application.SyncData.Interfaces;
 using TD.OpenData.WebApi.Infrastructure.SyncData;
 using TD.OpenData.WebApi.Shared.DTOs.Filters;
+using Hangfire;
 
 namespace TD.OpenData.WebApi.Infrastructure.Catalog.Services;
 
@@ -22,7 +23,6 @@ public class DatasetService : IDatasetService
 {
     private readonly IStringLocalizer<DatasetService> _localizer;
     private readonly IRepositoryAsync _repository;
-    private readonly IJobService _jobService;
     private readonly IForwardService _forwardService;
     private readonly ISqlService _sqlService;
     private readonly IExcelReader _excelReader;
@@ -30,14 +30,12 @@ public class DatasetService : IDatasetService
     public DatasetService(
         IRepositoryAsync repository,
         IStringLocalizer<DatasetService> localizer,
-        IJobService jobService,
         IForwardService forwardService,
         ISqlService sqlService,
         IExcelReader excelReader)
     {
         _repository = repository;
         _localizer = localizer;
-        _jobService = jobService;
         _forwardService = forwardService;
         _sqlService = sqlService;
         _excelReader = excelReader;
@@ -94,6 +92,13 @@ public class DatasetService : IDatasetService
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
         }
+        else if (string.Equals(dataType.Code, "excel", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
+        {
+            var itemConfig = request.DatasetAPIConfig.Adapt<DatasetFileConfig>();
+            itemConfig.DatasetId = itemDatasetId;
+            itemConfig.DomainEvents.Add(new StatsChangedEvent());
+            await _repository.CreateAsync(itemConfig);
+        }
         else if (string.Equals(dataType.Code, "database", StringComparison.OrdinalIgnoreCase) && request.DatasetDBConfig != null)
         {
             var itemConfig = request.DatasetAPIConfig.Adapt<DatasetDBConfig>();
@@ -103,6 +108,8 @@ public class DatasetService : IDatasetService
         }
 
         await _repository.SaveChangesAsync();
+
+        string? jobId = BackgroundJob.Enqueue(() => SyncDataAsync(itemDatasetId));
 
         return await Result<Guid>.SuccessAsync(itemDatasetId);
     }
@@ -189,8 +196,9 @@ public class DatasetService : IDatasetService
         };
 #pragma warning restore CS8603 // Possible null reference return.
         Dataset? dataset = await _repository.GetByIdAsync<Dataset>(id, includes);
+        string? dataTypeCode = dataset?.DataType?.Code?.ToLower();
 
-        if (dataset.DataType.Code.ToLower() == "webapi")
+        if (dataTypeCode == "webapi")
         {
             // Create table
             string? dataText = await _forwardService.ForwardDataset(dataset);
@@ -205,7 +213,7 @@ public class DatasetService : IDatasetService
             await _sqlService.ImportDataAsync(tableName, previewData.Metadata, previewData.Data);
         }
 
-        if (dataset.DataType.Code.ToLower() == "excel")
+        if (dataTypeCode == "excel")
         {
             byte[] fileBytes = await File.ReadAllBytesAsync(dataset.DatasetFileConfig.FileUrl);
             string? dataText = _excelReader.GetJsonData(new MemoryStream(fileBytes), dataset.DatasetFileConfig.SheetName);

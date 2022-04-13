@@ -15,13 +15,11 @@ public class DataTypeService : IDataTypeService
 {
     private readonly IStringLocalizer<DataTypeService> _localizer;
     private readonly IRepositoryAsync _repository;
-    private readonly IJobService _jobService;
 
-    public DataTypeService(IRepositoryAsync repository, IStringLocalizer<DataTypeService> localizer, IJobService jobService)
+    public DataTypeService(IRepositoryAsync repository, IStringLocalizer<DataTypeService> localizer)
     {
         _repository = repository;
         _localizer = localizer;
-        _jobService = jobService;
     }
 
     public async Task<Result<Guid>> CreateAsync(CreateDataTypeRequest request)
