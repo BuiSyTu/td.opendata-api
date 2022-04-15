@@ -87,6 +87,6 @@ public class DatasetsController : BaseController
     public async Task<IActionResult> SyncAsync(Guid id)
     {
         await _service.SyncDataAsync(id);
-        return NoContent();
+        return Ok(id);
     }
 }

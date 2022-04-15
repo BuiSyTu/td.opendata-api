@@ -27,7 +27,7 @@ public class UpdateDatasetRequest : IMustBeValid
 
     public string? Tenant { get; set; }
 
-    public CreateDatasetAPIConfigRequest? APIConfig { get; set; }
-    public CreateDatasetDBConfigRequest? DBConfig { get; set; }
-    public CreateDatasetFileConfigRequest? FileConfig { get; set; }
+    public CreateDatasetAPIConfigRequest? DatasetAPIConfig { get; set; }
+    public CreateDatasetDBConfigRequest? DatasetDBConfig { get; set; }
+    public CreateDatasetFileConfigRequest? DatasetFileConfig { get; set; }
 }

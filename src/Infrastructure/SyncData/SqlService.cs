@@ -52,6 +52,19 @@ public class SqlService : ISqlService
         }
     }
 
+    public async Task DeleteTableSqlAsync(string tableName)
+    {
+        try
+        {
+            string sql = $"DROP TABLE {tableName}";
+            _ = await _repository.ExecuteSqlRawAsync(sql);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex.Message);
+        }
+    }
+
     public async Task<object?> GetRaw(Guid id, PaginationFilter filter)
     {
         var dataset = await _repository.GetByIdAsync<Dataset>(id);
@@ -92,7 +105,7 @@ public class SqlService : ISqlService
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.ToString());
+                Console.Error.WriteLine(ex.Message);
             }
         }
     }

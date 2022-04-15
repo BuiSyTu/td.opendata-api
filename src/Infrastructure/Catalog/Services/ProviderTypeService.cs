@@ -20,7 +20,6 @@ public class ProviderTypeService : IProviderTypeService
     {
         _repository = repository;
         _localizer = localizer;
-        _jobService = jobService;
     }
 
     public async Task<Result<Guid>> CreateAsync(CreateProviderTypeRequest request)
