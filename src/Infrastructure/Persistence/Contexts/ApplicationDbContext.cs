@@ -6,6 +6,9 @@ using TD.OpenData.WebApi.Domain.Catalog;
 using TD.OpenData.WebApi.Domain.Common.Contracts;
 using Microsoft.EntityFrameworkCore;
 using TD.OpenData.WebApi.Infrastructure.Persistence.Configurations;
+using TD.OpenData.WebApi.Domain.AdministrativeCategories;
+using TD.OpenData.WebApi.Infrastructure.Persistence.Configurations.Catalog;
+using TD.OpenData.WebApi.Infrastructure.Persistence.Configurations.AdministrativeCategories;
 
 namespace TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 
@@ -38,6 +41,10 @@ public class ApplicationDbContext : BaseDbContext
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<Attachment> Attachments => Set<Attachment>();
     public DbSet<DatasetOffice> DatasetOffices => Set<DatasetOffice>();
+
+    public DbSet<DataSource> DataSources => Set<DataSource>();
+    public DbSet<MiningSource> MiningSources => Set<MiningSource>();
+    public DbSet<DocumentType> DocumentTypes => Set<DocumentType>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
@@ -112,6 +119,10 @@ public class ApplicationDbContext : BaseDbContext
         builder.ApplyConfiguration(new TagConfiguration());
         builder.ApplyConfiguration(new DatasetOfficeConfiguration());
         builder.ApplyConfiguration(new AttachmentConfiguration());
+
+        builder.ApplyConfiguration(new DocumentTypeConfiguration());
+        builder.ApplyConfiguration(new MiningSourceConfiguration());
+        builder.ApplyConfiguration(new DataSourceConfiguration());
 
         base.OnModelCreating(builder);
     }

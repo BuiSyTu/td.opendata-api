@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TD.OpenData.WebApi.Domain.Catalog;
 
-namespace TD.OpenData.WebApi.Infrastructure.Persistence.Configurations;
+namespace TD.OpenData.WebApi.Infrastructure.Persistence.Configurations.Catalog;
 
 internal class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
 {

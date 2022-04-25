@@ -5,17 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TD.OpenData.WebApi.Domain.Catalog;
+using TD.OpenData.WebApi.Domain.AdministrativeCategories;
 
-namespace TD.OpenData.WebApi.Infrastructure.Persistence.Configurations;
+namespace TD.OpenData.WebApi.Infrastructure.Persistence.Configurations.AdministrativeCategories;
 
-internal class TagConfiguration : IEntityTypeConfiguration<Tag>
+internal class DocumentTypeConfiguration : IEntityTypeConfiguration<DocumentType>
 {
-    public void Configure(EntityTypeBuilder<Tag> builder)
+    public void Configure(EntityTypeBuilder<DocumentType> builder)
     {
-        builder.ToTable("Tags");
+        builder.ToTable("DocumentTypes");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd().HasColumnType("uniqueidentifier");
-        builder.Property(x => x.Name).HasMaxLength(250);
     }
 }

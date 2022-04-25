@@ -7,15 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using TD.OpenData.WebApi.Domain.Catalog;
 
-namespace TD.OpenData.WebApi.Infrastructure.Persistence.Configurations;
+namespace TD.OpenData.WebApi.Infrastructure.Persistence.Configurations.Catalog;
 
-internal class DataTypeConfiguration : IEntityTypeConfiguration<DataType>
+internal class DatasetAPIConfigConfiguration : IEntityTypeConfiguration<DatasetAPIConfig>
 {
-    public void Configure(EntityTypeBuilder<DataType> builder)
+    public void Configure(EntityTypeBuilder<DatasetAPIConfig> builder)
     {
-        builder.ToTable("DataTypes");
+        builder.ToTable("DatasetAPIConfigs");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd().HasColumnType("uniqueidentifier");
-
     }
 }

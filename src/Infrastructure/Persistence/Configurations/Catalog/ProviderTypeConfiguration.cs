@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using TD.OpenData.WebApi.Domain.Catalog;
 
-namespace TD.OpenData.WebApi.Infrastructure.Persistence.Configurations;
+namespace TD.OpenData.WebApi.Infrastructure.Persistence.Configurations.Catalog;
 
-internal class LicenseConfiguration : IEntityTypeConfiguration<License>
+internal class ProviderTypeConfiguration : IEntityTypeConfiguration<ProviderType>
 {
-    public void Configure(EntityTypeBuilder<License> builder)
+    public void Configure(EntityTypeBuilder<ProviderType> builder)
     {
-        builder.ToTable("Licenses");
+        builder.ToTable("ProviderTypes");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd().HasColumnType("uniqueidentifier");
         builder.Property(x => x.Name).HasMaxLength(250);
