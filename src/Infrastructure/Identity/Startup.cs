@@ -81,8 +81,12 @@ internal static class Startup
     {
         services.Configure<JwtSettings>(config.GetSection($"SecuritySettings:{nameof(JwtSettings)}"));
         var jwtSettings = config.GetSection($"SecuritySettings:{nameof(JwtSettings)}").Get<JwtSettings>();
+
         if (string.IsNullOrEmpty(jwtSettings.Key))
+        {
             throw new InvalidOperationException("No Key defined in JwtSettings config.");
+        }
+
         byte[] key = Encoding.ASCII.GetBytes(jwtSettings.Key);
         _ = services
             .AddAuthentication(authentication =>
@@ -118,6 +122,17 @@ internal static class Startup
                     OnForbidden = _ => throw new IdentityException("You are not authorized to access this resource.", statusCode: HttpStatusCode.Forbidden),
                     OnMessageReceived = context =>
                     {
+                        if (context.Request.Headers.ContainsKey("TDAuthorization"))
+                        {
+                            string bearerToken = context.Request.Headers["TDAuthorization"].ElementAt(0);
+                            context.Token = (string)(bearerToken.StartsWith("Bearer ") ? bearerToken.Substring(7) : bearerToken);
+                        }
+
+                        if (context.Request.Cookies.ContainsKey("X-Access-Token"))
+                        {
+                            context.Token = context.Request.Cookies["X-Access-Token"];
+                        }
+
                         var accessToken = context.Request.Query["access_token"];
 
                         if (!string.IsNullOrEmpty(accessToken) &&

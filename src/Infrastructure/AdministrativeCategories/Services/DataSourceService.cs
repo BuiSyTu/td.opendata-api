@@ -30,7 +30,7 @@ public class DataSourceService : IDataSourceService
     public async Task<Result<Guid>> CreateAsync(CreateDataSourceRequest request)
     {
         bool itemExists = await _repository.ExistsAsync<DataSource>(a => a.Name == request.Name);
-        if (itemExists) throw new EntityAlreadyExistsException(string.Format(_localizer["DataType.alreadyexists"], request.Name));
+        if (itemExists) throw new EntityAlreadyExistsException(string.Format(_localizer["DataSource.alreadyexists"], request.Name));
         var item = request.Adapt<DataSource>();
 
         item.DomainEvents.Add(new StatsChangedEvent());
@@ -71,7 +71,7 @@ public class DataSourceService : IDataSourceService
     public async Task<Result<Guid>> UpdateAsync(UpdateDataSourceRequest request, Guid id)
     {
         var item = await _repository.GetByIdAsync<DataSource>(id);
-        if (item == null) throw new EntityNotFoundException(string.Format(_localizer["DataType.notfound"], id));
+        if (item == null) throw new EntityNotFoundException(string.Format(_localizer["DataSource.notfound"], id));
         var updatedItem = item.Update(request.Name, request.Description);
         updatedItem.DomainEvents.Add(new StatsChangedEvent());
         await _repository.UpdateAsync(updatedItem);

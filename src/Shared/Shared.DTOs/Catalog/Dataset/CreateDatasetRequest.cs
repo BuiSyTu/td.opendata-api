@@ -1,6 +1,6 @@
 namespace TD.OpenData.WebApi.Shared.DTOs.Catalog;
 
-public class CreateDatasetRequest : IMustBeValid
+public class CreateDatasetRequest : CreatedRequest, IMustBeValid
 {
     public string? Name { get; set; }
     public string? Title { get; set; }

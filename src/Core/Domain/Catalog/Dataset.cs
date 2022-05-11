@@ -27,17 +27,17 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     // 0 = chưa duyệt
     // 1 = đã duyệt
     // 2 = bị từ chối
-    public int? ApproveState { get;  set; }
+    public int? ApproveState { get; set; } = 0;
 
     // Đã đồng bộ hay chưa
     // True: Đã đồng bộ
     // False: Chưa đồng bộ
-    public bool? IsSynced { get; set; }
+    public bool? IsSynced { get; set; } = false;
 
     // Public ra cổng của công dân hay không
     // True: public
     // False: private
-    public bool? Visibility { get; set; }
+    public bool? Visibility { get; set; } = false;
 
     // Giấy phép
     public Guid? LicenseId { get; set; }
@@ -77,6 +77,10 @@ public class Dataset : AuditableEntity, IMustHaveTenant
 
     public string? TableName { get; set; }
 
+    // Đơn vị của tài khoản tạo
+    public string? OfficeCode { get; set; }
+    public string? OfficeName { get; set; }
+
     public virtual ICollection<DatasetOffice> DatasetOffices { get; set; } = new List<DatasetOffice>();
     public virtual ICollection<CustomField> CustomFields { get; set; } = new List<CustomField>();
     public virtual DatasetAPIConfig? DatasetAPIConfig { get; set; } = default!;
@@ -111,6 +115,9 @@ public class Dataset : AuditableEntity, IMustHaveTenant
         if (request.Tenant != null && !Tenant.NullToString().Equals(request.Tenant)) Tenant = request.Tenant;
 
         if (request.TableName != null && !TableName.NullToString().Equals(request.TableName)) TableName = request.TableName;
+
+        if (request.LastModifiedBy != null && !LastModifiedBy.NullToString().Equals(request.LastModifiedBy)) LastModifiedBy = request.LastModifiedBy;
+        if (request.LastModifiedOn != null && !LastModifiedOn.NullToString().Equals(request.LastModifiedOn)) LastModifiedOn = request.LastModifiedOn;
         return this;
     }
 

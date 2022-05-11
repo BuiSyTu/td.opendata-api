@@ -30,7 +30,7 @@ public class DocumentTypeService : IDocumentTypeService
     public async Task<Result<Guid>> CreateAsync(CreateDocumentTypeRequest request)
     {
         bool itemExists = await _repository.ExistsAsync<DocumentType>(a => a.Name == request.Name);
-        if (itemExists) throw new EntityAlreadyExistsException(string.Format(_localizer["DataType.alreadyexists"], request.Name));
+        if (itemExists) throw new EntityAlreadyExistsException(string.Format(_localizer["DocumentType.alreadyexists"], request.Name));
         var item = request.Adapt<DocumentType>();
 
         item.DomainEvents.Add(new StatsChangedEvent());
@@ -71,7 +71,7 @@ public class DocumentTypeService : IDocumentTypeService
     public async Task<Result<Guid>> UpdateAsync(UpdateDocumentTypeRequest request, Guid id)
     {
         var item = await _repository.GetByIdAsync<DocumentType>(id);
-        if (item == null) throw new EntityNotFoundException(string.Format(_localizer["DataType.notfound"], id));
+        if (item == null) throw new EntityNotFoundException(string.Format(_localizer["DocumentType.notfound"], id));
         var updatedItem = item.Update(request.Name, request.Description);
         updatedItem.DomainEvents.Add(new StatsChangedEvent());
         await _repository.UpdateAsync(updatedItem);

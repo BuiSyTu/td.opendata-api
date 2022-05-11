@@ -30,7 +30,7 @@ public class MiningSourceService : IMiningSourceService
     public async Task<Result<Guid>> CreateAsync(CreateMiningSourceRequest request)
     {
         bool itemExists = await _repository.ExistsAsync<MiningSource>(a => a.Name == request.Name);
-        if (itemExists) throw new EntityAlreadyExistsException(string.Format(_localizer["DataType.alreadyexists"], request.Name));
+        if (itemExists) throw new EntityAlreadyExistsException(string.Format(_localizer["MiningSource.alreadyexists"], request.Name));
         var item = request.Adapt<MiningSource>();
 
         item.DomainEvents.Add(new StatsChangedEvent());
@@ -71,7 +71,7 @@ public class MiningSourceService : IMiningSourceService
     public async Task<Result<Guid>> UpdateAsync(UpdateMiningSourceRequest request, Guid id)
     {
         var item = await _repository.GetByIdAsync<MiningSource>(id);
-        if (item == null) throw new EntityNotFoundException(string.Format(_localizer["DataType.notfound"], id));
+        if (item == null) throw new EntityNotFoundException(string.Format(_localizer["MiningSource.notfound"], id));
         var updatedItem = item.Update(request.Name, request.Description);
         updatedItem.DomainEvents.Add(new StatsChangedEvent());
         await _repository.UpdateAsync(updatedItem);
