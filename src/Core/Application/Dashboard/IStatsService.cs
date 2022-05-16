@@ -7,4 +7,5 @@ namespace TD.OpenData.WebApi.Application.Dashboard;
 public interface IStatsService : ITransientService
 {
     Task<IResult<StatsDto>> GetDataAsync();
+    Task<IResult<Widget>> GetWidgetsAsync();
 }

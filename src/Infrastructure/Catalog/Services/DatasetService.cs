@@ -51,6 +51,21 @@ public class DatasetService : IDatasetService
         return await Result<Guid>.SuccessAsync(id);
     }
 
+    public Task<int> GetCountAsync(DatasetListFilter filter)
+    {
+        var filters = new Filters<Dataset>();
+        filters.Add(filter.CategoryId.HasValue, x => x.CategoryId.Equals(filter.CategoryId!.Value));
+        filters.Add(filter.LicenseId.HasValue, x => x.LicenseId.Equals(filter.LicenseId!.Value));
+        filters.Add(filter.OrganizationId.HasValue, x => x.OrganizationId.Equals(filter.OrganizationId!.Value));
+        filters.Add(filter.DataTypeId.HasValue, x => x.DataTypeId.Equals(filter.DataTypeId!.Value));
+        filters.Add(filter.ProviderTypeId.HasValue, x => x.ProviderTypeId.Equals(filter.ProviderTypeId!.Value));
+        filters.Add(filter.ApproveState.HasValue, x => x.ApproveState == filter.ApproveState!.Value);
+        filters.Add(filter.Visibility.HasValue, x => x.Visibility == filter.Visibility!.Value);
+        filters.Add(!string.IsNullOrEmpty(filter.DataTypeCode), x => x.DataType.Code == filter.DataTypeCode);
+
+        return _repository.GetCountAsync(filters);
+    }
+
     public async Task<Result<Guid>> CreateAsync(CreateDatasetRequest request)
     {
         bool itemExists = await _repository.ExistsAsync<Dataset>(a => a.Name == request.Name && a.Code == request.Code);
@@ -173,6 +188,7 @@ public class DatasetService : IDatasetService
         filters.Add(filter.ProviderTypeId.HasValue, x => x.ProviderTypeId.Equals(filter.ProviderTypeId!.Value));
         filters.Add(filter.ApproveState.HasValue, x => x.ApproveState == filter.ApproveState!.Value);
         filters.Add(filter.Visibility.HasValue, x => x.Visibility == filter.Visibility!.Value);
+        filters.Add(!string.IsNullOrEmpty(filter.DataTypeCode), x => x.DataType.Code == filter.DataTypeCode);
 
         var specification = new PaginationSpecification<Dataset>
         {

@@ -77,6 +77,16 @@ public interface IRepositoryAsync : ITransientService
     where TDto : IDto;
 
     /// <summary>
+    /// Get count from filters
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="filters"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<int> GetCountAsync<T>(Filters<T> filters, CancellationToken cancellationToken = default)
+        where T : BaseEntity;
+
+    /// <summary>
     /// Get a <typeparamref name="T"/> based on the <paramref name="entityId"/> which is the primary key value of the entity
     /// if found otherwise <see langword="null"/>.
     /// </summary>

@@ -5,6 +5,7 @@ using TD.OpenData.WebApi.Domain.Catalog;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using TD.OpenData.WebApi.Shared.DTOs.Dashboard;
 using Microsoft.Extensions.Localization;
+using TD.OpenData.WebApi.Application.Catalog.Interfaces;
 
 namespace TD.OpenData.WebApi.Application.Dashboard;
 
@@ -14,13 +15,20 @@ public class StatsService : IStatsService
     private readonly IRoleService _roleService;
     private readonly IRepositoryAsync _repository;
     private readonly IStringLocalizer<StatsService> _localizer;
+    private readonly IDatasetService _datasetService;
 
-    public StatsService(IRepositoryAsync repository, IRoleService roleService, IUserService userService, IStringLocalizer<StatsService> localizer)
+    public StatsService(
+        IRepositoryAsync repository,
+        IRoleService roleService,
+        IUserService userService,
+        IStringLocalizer<StatsService> localizer,
+        IDatasetService datasetService)
     {
         _repository = repository;
         _roleService = roleService;
         _userService = userService;
         _localizer = localizer;
+        _datasetService = datasetService;
     }
 
     public async Task<IResult<StatsDto>> GetDataAsync()
@@ -50,5 +58,24 @@ public class StatsService : IStatsService
         stats.DataEnterBarChart.Add(new ChartSeries { Name = _localizer["Brands"], Data = brandsFigure });
 
         return await Result<StatsDto>.SuccessAsync(stats);
+    }
+
+    public async Task<IResult<Widget>> GetWidgetsAsync()
+    {
+        var widget = new Widget
+        {
+            WebAPI = await _datasetService.GetCountAsync(new DatasetListFilter
+            {
+                DataTypeCode = "webapi"
+            }),
+            Excel = await _datasetService.GetCountAsync(new DatasetListFilter {
+                DataTypeCode = "excel"
+            }),
+            Database = await _datasetService.GetCountAsync(new DatasetListFilter {
+                DataTypeCode = "database"
+            })
+        };
+
+        return await Result<Widget>.SuccessAsync(widget);
     }
 }

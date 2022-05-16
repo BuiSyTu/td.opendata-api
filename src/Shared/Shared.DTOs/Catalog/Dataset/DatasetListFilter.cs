@@ -11,4 +11,5 @@ public class DatasetListFilter : PaginationFilter
     public Guid? ProviderTypeId { get; set; }
     public int? ApproveState { get; set; }
     public bool? Visibility { get; set; }
+    public string? DataTypeCode { get; set; }
 }

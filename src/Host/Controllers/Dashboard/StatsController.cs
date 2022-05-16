@@ -16,9 +16,16 @@ public class StatsController : BaseController
     }
 
     [HttpGet]
-    public async Task<ActionResult<Result<StatsDto>>> GetAsync()
+    public async Task<IActionResult> GetAsync()
     {
         var stats = await _service.GetDataAsync();
+        return Ok(stats);
+    }
+
+    [HttpGet("widget")]
+    public async Task<IActionResult> GetWidgetsAsync()
+    {
+        var stats = await _service.GetWidgetsAsync();
         return Ok(stats);
     }
 }

@@ -13,6 +13,8 @@ public interface IDatasetService : ITransientService
 
     Task<PaginatedResult<DatasetDto>> SearchAsync(DatasetListFilter filter);
 
+    Task<int> GetCountAsync(DatasetListFilter filter);
+
     Task<Result<Guid>> CreateAsync(CreateDatasetRequest request);
 
     Task<Result<Guid>> UpdateAsync(UpdateDatasetRequest request, Guid id);

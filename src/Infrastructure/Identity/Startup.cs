@@ -107,6 +107,7 @@ internal static class Startup
                     ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero
                 };
+
                 bearer.Events = new JwtBearerEvents
                 {
                     OnChallenge = context =>
@@ -125,7 +126,7 @@ internal static class Startup
                         if (context.Request.Headers.ContainsKey("TDAuthorization"))
                         {
                             string bearerToken = context.Request.Headers["TDAuthorization"].ElementAt(0);
-                            context.Token = (string)(bearerToken.StartsWith("Bearer ") ? bearerToken.Substring(7) : bearerToken);
+                            context.Token = bearerToken.StartsWith("Bearer ") ? bearerToken[7..] : bearerToken;
                         }
 
                         if (context.Request.Cookies.ContainsKey("X-Access-Token"))
