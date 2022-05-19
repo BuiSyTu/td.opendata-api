@@ -4,6 +4,7 @@ using TD.OpenData.WebApi.Domain.Constants;
 using TD.OpenData.WebApi.Infrastructure.Identity.Permissions;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TD.OpenData.WebApi.Host.Controllers.Catalog;
 
@@ -18,6 +19,7 @@ public class ProductsController : BaseController
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAsync([FromQuery] ProductListFilter filter)
     {
         var products = await _service.SearchAsync(filter);

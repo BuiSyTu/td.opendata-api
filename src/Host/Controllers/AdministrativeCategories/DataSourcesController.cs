@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using TD.OpenData.WebApi.Application.AdministrativeCategories.Interfaces;
 using TD.OpenData.WebApi.Shared.DTOs.AdministrativeCategories.DataSource;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TD.OpenData.WebApi.Host.Controllers.AdministrativeCategories;
 
@@ -21,6 +22,7 @@ public class DataSourcesController : BaseController
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAsync([FromQuery] DataSourceListFilter filter)
     {
         var items = await _service.SearchAsync(filter);

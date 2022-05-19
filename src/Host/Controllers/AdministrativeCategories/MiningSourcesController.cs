@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using TD.OpenData.WebApi.Application.AdministrativeCategories.Interfaces;
 using TD.OpenData.WebApi.Shared.DTOs.AdministrativeCategories.MiningSource;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TD.OpenData.WebApi.Host.Controllers.AdministrativeCategories;
 
@@ -21,6 +22,7 @@ public class MiningSourcesController : BaseController
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAsync([FromQuery] MiningSourceListFilter filter)
     {
         var items = await _service.SearchAsync(filter);
