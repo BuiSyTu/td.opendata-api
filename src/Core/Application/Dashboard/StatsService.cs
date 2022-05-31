@@ -60,6 +60,18 @@ public class StatsService : IStatsService
         return await Result<StatsDto>.SuccessAsync(stats);
     }
 
+    public async Task<IResult<OverViewWidget>> GetOverViewAsync()
+    {
+        var widget = new OverViewWidget
+        {
+            Category = await _repository.GetCountAsync<Category>(),
+            Dataset = await _repository.GetCountAsync<Dataset>(),
+            Organization = await _repository.GetCountAsync<Organization>(),
+        };
+
+        return await Result<OverViewWidget>.SuccessAsync(widget);
+    }
+
     public async Task<IResult<Widget>> GetWidgetsAsync()
     {
         var widget = new Widget
@@ -68,10 +80,12 @@ public class StatsService : IStatsService
             {
                 DataTypeCode = "webapi"
             }),
-            Excel = await _datasetService.GetCountAsync(new DatasetListFilter {
+            Excel = await _datasetService.GetCountAsync(new DatasetListFilter
+            {
                 DataTypeCode = "excel"
             }),
-            Database = await _datasetService.GetCountAsync(new DatasetListFilter {
+            Database = await _datasetService.GetCountAsync(new DatasetListFilter
+            {
                 DataTypeCode = "database"
             })
         };

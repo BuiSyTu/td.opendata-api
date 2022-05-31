@@ -26,4 +26,8 @@ public interface IDatasetService : ITransientService
     Task<Result<Guid>> RejectedAsync(Guid id);
 
     Task SyncDataAsync(Guid id);
+
+    object GroupByCategory();
+
+    object GroupByOrganization();
 }

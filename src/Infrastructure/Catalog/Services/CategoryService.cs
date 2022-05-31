@@ -83,8 +83,6 @@ public class CategoryService : ICategoryService
     {
         var item = await _repository.GetByIdAsync<Category>(id);
         if (item == null) throw new EntityNotFoundException(string.Format(_localizer["category.notfound"], id));
-        string? itemImagePath = null;
-        if (request.Image != null) itemImagePath = await _file.UploadAsync<Category>(request.Image, FileType.Image);
 
         if (request.ParentId != default)
         {
@@ -92,7 +90,7 @@ public class CategoryService : ICategoryService
             if (parentItem == null) throw new EntityNotFoundException(string.Format(_localizer["category.notfound"], id));
         }
 
-        var updatedItem = item.Update(request.ParentId, request.Name, request.Code, request.Description, itemImagePath, request.Icon, request.Order, request.IsActive);
+        var updatedItem = item.Update(request);
         updatedItem.DomainEvents.Add(new StatsChangedEvent());
         await _repository.UpdateAsync(updatedItem);
         await _repository.SaveChangesAsync();

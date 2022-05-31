@@ -398,8 +398,6 @@ public class RepositoryAsync : IRepositoryAsync
         return await _dbContext.Database.ExecuteSqlRawAsync(sql, cancellationToken);
     }
 
-    public async Task<int> GetCountAsync<T>(Filters<T> filters, CancellationToken cancellationToken = default) where T : BaseEntity
-    {
-        return await _dbContext.Set<T>().ApplyFilter(filters).CountAsync();
-    }
+    public async Task<int> GetCountAsync<T>(Filters<T> filters, CancellationToken cancellationToken = default)
+        where T : BaseEntity => await _dbContext.Set<T>().ApplyFilter(filters).CountAsync(cancellationToken);
 }

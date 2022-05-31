@@ -1,6 +1,7 @@
 using TD.OpenData.WebApi.Domain.Common;
 using TD.OpenData.WebApi.Domain.Common.Contracts;
 using TD.OpenData.WebApi.Domain.Contracts;
+using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 
 namespace TD.OpenData.WebApi.Domain.Catalog;
 
@@ -19,20 +20,16 @@ public class Category : AuditableEntity, IMustHaveTenant
     public string? Tenant { get; set; }
     public virtual ICollection<Dataset> Datasets { get; set; } = new List<Dataset>();
 
-    public Category()
+    public Category Update(UpdateCategoryRequest request)
     {
-    }
-
-    public Category Update(Guid? parentId, string? name, string? code, string? description, string? imageUrl, string? icon, int?order, bool? isActive)
-    {
-        if (name != null && !Name.NullToString().Equals(name)) Name = name;
-        if (description != null && !Description.NullToString().Equals(description)) Description = description;
-        if (code != null && !Code.NullToString().Equals(code)) Code = code;
-        if (isActive != null && IsActive != isActive) IsActive = isActive;
-        if (parentId != Guid.Empty && !ParentId.NullToString().Equals(parentId)) ParentId = parentId;
-        if (imageUrl != null && !ImageUrl.NullToString().Equals(imageUrl)) ImageUrl = imageUrl;
-        if (icon != null && !Icon.NullToString().Equals(icon)) Icon = icon;
-        if (order != null && Order != order) Order = order;
+        if (request.Name != null && !Name.NullToString().Equals(request.Name)) Name = request.Name;
+        if (request.Description != null && !Description.NullToString().Equals(request.Description)) Description = request.Description;
+        if (request.Code != null && !Code.NullToString().Equals(request.Code)) Code = request.Code;
+        if (request.IsActive != null && IsActive != request.IsActive) IsActive = request.IsActive;
+        if (request.ParentId != Guid.Empty && !ParentId.NullToString().Equals(request.ParentId)) ParentId = request.ParentId;
+        if (request.ImageUrl != null && !ImageUrl.NullToString().Equals(request.ImageUrl)) ImageUrl = request.ImageUrl;
+        if (request.Icon != null && !Icon.NullToString().Equals(request.Icon)) Icon = request.Icon;
+        if (request.Order != null && Order != request.Order) Order = request.Order;
         return this;
     }
 }

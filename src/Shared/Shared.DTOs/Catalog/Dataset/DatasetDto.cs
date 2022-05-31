@@ -11,6 +11,9 @@ public class DatasetDto : IDto
     public bool? Visibility { get; set; }
     public int? ApproveState { get; set; }
     public bool? IsSynced { get; set; }
+    public int? View { get; set; }
     public Guid? OrganizationId { get; set; }
     public OrganizationDto? Organization { get; set; }
+    public Guid? CategoryId { get; set; }
+    public CategoryDto? Category { get; set; }
 }

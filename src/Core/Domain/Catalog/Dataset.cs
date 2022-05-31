@@ -81,6 +81,9 @@ public class Dataset : AuditableEntity, IMustHaveTenant
     public string? OfficeCode { get; set; }
     public string? OfficeName { get; set; }
 
+    // Lượt xem
+    public int? View { get; set; }
+
     public virtual ICollection<DatasetOffice> DatasetOffices { get; set; } = new List<DatasetOffice>();
     public virtual ICollection<CustomField> CustomFields { get; set; } = new List<CustomField>();
     public virtual DatasetAPIConfig? DatasetAPIConfig { get; set; } = default!;

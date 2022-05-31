@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TD.OpenData.WebApi.Shared.DTOs.Forward;
 using TD.OpenData.WebApi.Application.Forward;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TD.OpenData.WebApi.Host.Controllers.Catalog;
 
@@ -15,6 +16,7 @@ public class ForwardController : BaseController
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Forward(AxiosConfig axiosConfig)
     {
         string? result = await _forwardService.ForwardAxios(axiosConfig);

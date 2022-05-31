@@ -15,6 +15,9 @@ using TD.OpenData.WebApi.Domain.Catalog.Events;
 using TD.OpenData.WebApi.Application.SyncData.Interfaces;
 using TD.OpenData.WebApi.Infrastructure.SyncData;
 using Hangfire;
+using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
+using TD.OpenData.WebApi.Shared.DTOs.Dashboard;
 
 namespace TD.OpenData.WebApi.Infrastructure.Catalog.Services;
 
@@ -25,19 +28,22 @@ public class DatasetService : IDatasetService
     private readonly IForwardService _forwardService;
     private readonly ISqlService _sqlService;
     private readonly IExcelReader _excelReader;
+    private readonly ApplicationDbContext _dbContext;
 
     public DatasetService(
         IRepositoryAsync repository,
         IStringLocalizer<DatasetService> localizer,
         IForwardService forwardService,
         ISqlService sqlService,
-        IExcelReader excelReader)
+        IExcelReader excelReader,
+        ApplicationDbContext dbContext)
     {
         _repository = repository;
         _localizer = localizer;
         _forwardService = forwardService;
         _sqlService = sqlService;
         _excelReader = excelReader;
+        _dbContext = dbContext;
     }
 
     public async Task<Result<Guid>> ApprovedAsync(Guid id)
@@ -141,6 +147,7 @@ public class DatasetService : IDatasetService
 
     public async Task<object> GetDataAsync(Guid id, string? orderBy, int skip, int top)
     {
+        if (top > 1000) top = 1000;
         var dataset = await _repository.GetByIdAsync<Dataset>(id);
 
         string sql =
@@ -163,8 +170,24 @@ public class DatasetService : IDatasetService
             x => x.DatasetDBConfig, x => x.DatasetFileConfig
         };
 #pragma warning restore CS8603 // Possible null reference return.
-        var item = await _repository.GetByIdAsync<Dataset, DatasetDetailsDto>(id, includes);
-        return await Result<DatasetDetailsDto>.SuccessAsync(item);
+        var item = await _repository.GetByIdAsync(id, includes);
+
+        if (item != null)
+        {
+            if (item.View.HasValue)
+            {
+                item.View++;
+            }
+            else
+            {
+                item.View = 1;
+            }
+
+            await _repository.UpdateAsync(item);
+            await _repository.SaveChangesAsync();
+        }
+
+        return await Result<DatasetDetailsDto>.SuccessAsync(item.Adapt<DatasetDetailsDto>());
     }
 
     public async Task<Result<Guid>> RejectedAsync(Guid id)
@@ -264,6 +287,7 @@ public class DatasetService : IDatasetService
         var itemToUpdate = item.Update(request);
         itemToUpdate.DomainEvents.Add(new StatsChangedEvent());
         await _repository.UpdateAsync(itemToUpdate);
+        await _repository.SaveChangesAsync();
 
         var dataType = await _repository.GetByIdAsync<DataType>((Guid)request.DataTypeId);
 
@@ -273,6 +297,7 @@ public class DatasetService : IDatasetService
             itemConfig.DatasetId = id;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
+            await _repository.SaveChangesAsync();
         }
         else if (string.Equals(dataType.Code, "file", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
         {
@@ -280,6 +305,7 @@ public class DatasetService : IDatasetService
             itemConfig.DatasetId = id;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
+            await _repository.SaveChangesAsync();
         }
         else if (string.Equals(dataType.Code, "excel", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
         {
@@ -287,6 +313,7 @@ public class DatasetService : IDatasetService
             itemConfig.DatasetId = id;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
+            await _repository.SaveChangesAsync();
         }
         else if (string.Equals(dataType.Code, "database", StringComparison.OrdinalIgnoreCase) && request.DatasetDBConfig != null)
         {
@@ -294,9 +321,74 @@ public class DatasetService : IDatasetService
             itemConfig.DatasetId = id;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
+            await _repository.SaveChangesAsync();
         }
 
-        await _repository.SaveChangesAsync();
         return await Result<Guid>.SuccessAsync(id);
+    }
+
+    public object GroupByCategory()
+    {
+        var result = _dbContext.Categories
+            .Select(x => new DashboardItem
+            {
+                Name = x.Name,
+                Count = 0
+            })
+            .ToList();
+
+        var datasets = _dbContext.Datasets
+            .GroupBy(x => x.Category.Name)
+            .Select(g => new DashboardItem
+            {
+                Name = g.Key,
+                Count = g.Count()
+            })
+            .ToList();
+
+        datasets.ForEach(dataset =>
+        {
+            var category = result.FirstOrDefault(x => x.Name == dataset.Name);
+
+            if (category != null)
+            {
+                category.Count = dataset.Count;
+            }
+        });
+
+        return result;
+    }
+
+    public object GroupByOrganization()
+    {
+        var result = _dbContext.Organizations
+            .Select(x => new DashboardItem
+            {
+                Name = x.Name,
+                Count = 0
+            })
+            .ToList();
+
+
+        var datasets = _dbContext.Datasets
+            .GroupBy(x => x.Organization.Name)
+            .Select(g => new
+            {
+                Name = g.Key,
+                Count = g.Count()
+            })
+            .ToList();
+
+        datasets.ForEach(dataset =>
+        {
+            var organization = result.FirstOrDefault(x => x.Name == dataset.Name);
+
+            if (organization != null)
+            {
+                organization.Count = dataset.Count;
+            }
+        });
+
+        return result;
     }
 }

@@ -11,5 +11,5 @@ public class UpdateCategoryRequest : IMustBeValid
     public string? Icon { get; set; }
     public int? Order { get; set; }
     public bool? IsActive { get; set; }
-    public FileUploadRequest? Image { get; set; }
+    public string? ImageUrl { get; set; }
 }

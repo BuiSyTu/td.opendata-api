@@ -21,7 +21,7 @@ public class TagsController : BaseController
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> GetAsync([FromQuery]TagListFilter filter)
+    public async Task<IActionResult> GetAsync([FromQuery] TagListFilter filter)
     {
         var items = await _service.SearchAsync(filter);
         return Ok(items);
@@ -36,18 +36,21 @@ public class TagsController : BaseController
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> CreateAsync(CreateTagRequest request)
     {
         return Ok(await _service.CreateAsync(request));
     }
 
     [HttpPut("{id:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> UpdateAsync(UpdateTagRequest request, Guid id)
     {
         return Ok(await _service.UpdateAsync(request, id));
     }
 
     [HttpDelete("{id:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var itemId = await _service.DeleteAsync(id);

@@ -25,6 +25,8 @@ public class DatasetDetailsDto : IDto
 
     public string? TableName { get; set; }
 
+    public int? View { get; set; }
+
     public Guid? DataTypeId { get; set; }
     public DataTypeDto? DataType { get; set; }
     public Guid? CategoryId { get; set; }

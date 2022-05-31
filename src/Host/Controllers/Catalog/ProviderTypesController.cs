@@ -28,6 +28,7 @@ public class ProviderTypesController : BaseController
     }
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetByIdAsync(Guid id)
     {
         var product = await _service.GetDetailsAsync(id);
@@ -43,18 +44,21 @@ public class ProviderTypesController : BaseController
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> CreateAsync(CreateProviderTypeRequest request)
     {
         return Ok(await _service.CreateAsync(request));
     }
 
     [HttpPut("{id:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> UpdateAsync(UpdateProviderTypeRequest request, Guid id)
     {
         return Ok(await _service.UpdateAsync(request, id));
     }
 
     [HttpDelete("{id:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var itemId = await _service.DeleteAsync(id);

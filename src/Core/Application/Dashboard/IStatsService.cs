@@ -8,4 +8,5 @@ public interface IStatsService : ITransientService
 {
     Task<IResult<StatsDto>> GetDataAsync();
     Task<IResult<Widget>> GetWidgetsAsync();
+    Task<IResult<OverViewWidget>> GetOverViewAsync();
 }

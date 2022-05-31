@@ -5,6 +5,7 @@ using TD.OpenData.WebApi.Infrastructure.Identity.Permissions;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TD.OpenData.WebApi.Host.Controllers.Catalog;
 
@@ -19,6 +20,7 @@ public class AttachmentsController : BaseController
     }
 
     [HttpPost]
+    [AllowAnonymous]
     [DisableRequestSizeLimit]
     public async Task<IActionResult> PostAsync([FromForm(Name = "files")] List<IFormFile> files)
     {
