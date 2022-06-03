@@ -16,4 +16,6 @@ public class DatasetDto : IDto
     public OrganizationDto? Organization { get; set; }
     public Guid? CategoryId { get; set; }
     public CategoryDto? Category { get; set; }
+    public DateTime? CreatedOn { get; private set; }
+    public DateTime? LastModifiedOn { get; set; }
 }

@@ -210,8 +210,9 @@ public class DatasetService : IDatasetService
         filters.Add(filter.DataTypeId.HasValue, x => x.DataTypeId.Equals(filter.DataTypeId!.Value));
         filters.Add(filter.ProviderTypeId.HasValue, x => x.ProviderTypeId.Equals(filter.ProviderTypeId!.Value));
         filters.Add(filter.ApproveState.HasValue, x => x.ApproveState == filter.ApproveState!.Value);
-        filters.Add(filter.Visibility.HasValue, x => x.Visibility == filter.Visibility!.Value);
+        filters.Add(filter.Visibility.HasValue, x => x.Visibility == filter.Visibility.Value);
         filters.Add(!string.IsNullOrEmpty(filter.DataTypeCode), x => x.DataType.Code == filter.DataTypeCode);
+        filters.Add(!string.IsNullOrEmpty(filter.author), x => x.Author == filter.author);
 
         var specification = new PaginationSpecification<Dataset>
         {

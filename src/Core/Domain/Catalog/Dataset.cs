@@ -9,13 +9,13 @@ namespace TD.OpenData.WebApi.Domain.Catalog;
 public class Dataset : AuditableEntity, IMustHaveTenant
 {
     // Tên dữ liệu
-    public string? Name { get;  set; }
+    public string? Name { get; set; }
 
     // Tiêu dề dữ liệu
     public string? Title { get; set; }
 
     // Mô tả
-    public string? Description { get;  set; }
+    public string? Description { get; set; }
 
     // Mã dữ liệu
     public string? Code { get; set; }
