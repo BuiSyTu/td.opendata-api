@@ -29,6 +29,9 @@ public class DatasetService : IDatasetService
     private readonly ISqlService _sqlService;
     private readonly IExcelReader _excelReader;
     private readonly ApplicationDbContext _dbContext;
+    private readonly IDatasetAPIConfigService _datasetAPIConfigService;
+    private readonly IDatasetFileConfigService _datasetFileConfigService;
+    private readonly IDatasetDBConfigService _datasetDBConfigService;
 
     public DatasetService(
         IRepositoryAsync repository,
@@ -36,7 +39,10 @@ public class DatasetService : IDatasetService
         IForwardService forwardService,
         ISqlService sqlService,
         IExcelReader excelReader,
-        ApplicationDbContext dbContext)
+        ApplicationDbContext dbContext,
+        IDatasetAPIConfigService datasetAPIConfigService,
+        IDatasetFileConfigService datasetFileConfigService,
+        IDatasetDBConfigService datasetDBConfigService)
     {
         _repository = repository;
         _localizer = localizer;
@@ -44,6 +50,9 @@ public class DatasetService : IDatasetService
         _sqlService = sqlService;
         _excelReader = excelReader;
         _dbContext = dbContext;
+        _datasetAPIConfigService = datasetAPIConfigService;
+        _datasetFileConfigService = datasetFileConfigService;
+        _datasetDBConfigService = datasetDBConfigService;
     }
 
     public async Task<Result<Guid>> ApprovedAsync(Guid id)
@@ -285,45 +294,65 @@ public class DatasetService : IDatasetService
         var item = await _repository.GetByIdAsync<Dataset>(id);
         if (item == null) throw new EntityNotFoundException(string.Format(_localizer["dataset.notfound"], id));
 
-        var itemToUpdate = item.Update(request);
-        itemToUpdate.DomainEvents.Add(new StatsChangedEvent());
-        await _repository.UpdateAsync(itemToUpdate);
-        await _repository.SaveChangesAsync();
-
         var dataType = await _repository.GetByIdAsync<DataType>((Guid)request.DataTypeId);
 
         if (string.Equals(dataType.Code, "webapi", StringComparison.OrdinalIgnoreCase) && request.DatasetAPIConfig != null)
         {
+            var itemConfigToDelete = _dbContext.DatasetAPIConfigs.FirstOrDefault(x => x.DatasetId == id);
+            if (itemConfigToDelete != null)
+            {
+                _dbContext.DatasetAPIConfigs.Remove(itemConfigToDelete);
+            }
             var itemConfig = request.DatasetAPIConfig.Adapt<DatasetAPIConfig>();
             itemConfig.DatasetId = id;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
-            await _repository.SaveChangesAsync();
         }
         else if (string.Equals(dataType.Code, "file", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
         {
-            var itemConfig = request.DatasetAPIConfig.Adapt<DatasetFileConfig>();
+            var itemConfigToDelete = _dbContext.DatasetFileConfigs.FirstOrDefault(x => x.DatasetId == id);
+            if (itemConfigToDelete != null)
+            {
+                _dbContext.DatasetFileConfigs.Remove(itemConfigToDelete);
+            }
+
+            var itemConfig = request.DatasetFileConfig.Adapt<DatasetFileConfig>();
             itemConfig.DatasetId = id;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
-            await _repository.SaveChangesAsync();
         }
         else if (string.Equals(dataType.Code, "excel", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
         {
-            var itemConfig = request.DatasetAPIConfig.Adapt<DatasetFileConfig>();
+            var itemConfigToDelete = _dbContext.DatasetFileConfigs.FirstOrDefault(x => x.DatasetId == id);
+            if (itemConfigToDelete != null)
+            {
+                _dbContext.DatasetFileConfigs.Remove(itemConfigToDelete);
+            }
+
+            var itemConfig = request.DatasetFileConfig.Adapt<DatasetFileConfig>();
             itemConfig.DatasetId = id;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
-            await _repository.SaveChangesAsync();
         }
         else if (string.Equals(dataType.Code, "database", StringComparison.OrdinalIgnoreCase) && request.DatasetDBConfig != null)
         {
-            var itemConfig = request.DatasetAPIConfig.Adapt<DatasetDBConfig>();
+            var itemConfigToDelete = _dbContext.DatasetDBConfigs.FirstOrDefault(x => x.DatasetId == id);
+            if (itemConfigToDelete != null)
+            {
+                _dbContext.DatasetDBConfigs.Remove(itemConfigToDelete);
+            }
+
+            _datasetDBConfigService.DeleteByDatasetId(id);
+            var itemConfig = request.DatasetDBConfig.Adapt<DatasetDBConfig>();
             itemConfig.DatasetId = id;
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
-            await _repository.SaveChangesAsync();
         }
+
+        var itemToUpdate = item.Update(request);
+        itemToUpdate.DomainEvents.Add(new StatsChangedEvent());
+        await _repository.UpdateAsync(itemToUpdate);
+        await _repository.SaveChangesAsync();
 
         return await Result<Guid>.SuccessAsync(id);
     }
