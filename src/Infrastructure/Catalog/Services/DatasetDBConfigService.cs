@@ -1,4 +1,5 @@
 using TD.OpenData.WebApi.Application.Catalog.Interfaces;
+using TD.OpenData.WebApi.Domain.Catalog;
 using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 
 namespace TD.OpenData.WebApi.Infrastructure.Catalog.Services;
@@ -21,5 +22,10 @@ public class DatasetDBConfigService : IDatasetDBConfigService
             _dbContext.DatasetDBConfigs.Remove(item);
             _dbContext.SaveChanges();
         }
+    }
+
+    public DatasetDBConfig? GetByDatasetId(Guid datasetId)
+    {
+        return _dbContext.DatasetDBConfigs.FirstOrDefault(x => x.DatasetId == datasetId);
     }
 }

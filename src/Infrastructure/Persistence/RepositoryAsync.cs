@@ -279,11 +279,6 @@ public class RepositoryAsync : IRepositoryAsync
     public Task UpdateAsync<T>(T entity, CancellationToken cancellationToken = default)
     where T : BaseEntity
     {
-        if (_dbContext.Entry(entity).State == EntityState.Unchanged)
-        {
-            throw new NothingToUpdateException();
-        }
-
         var existing = _dbContext.Set<T>().Find(entity.Id);
 
         _ = existing ?? throw new EntityNotFoundException(string.Format(_localizer["entity.notfound"], typeof(T).Name, entity.Id));
@@ -355,8 +350,11 @@ public class RepositoryAsync : IRepositoryAsync
                 cancellationToken: cancellationToken);
 
     // SaveChanges
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
-        _dbContext.SaveChangesAsync(cancellationToken);
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
 
     // Dapper
     public async Task<IReadOnlyList<T>> QueryAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
