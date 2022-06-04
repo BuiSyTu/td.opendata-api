@@ -298,62 +298,82 @@ public class DatasetService : IDatasetService
 
         if (string.Equals(dataType.Code, "webapi", StringComparison.OrdinalIgnoreCase) && request.DatasetAPIConfig != null)
         {
-            var itemConfigToDelete = _dbContext.DatasetAPIConfigs.FirstOrDefault(x => x.DatasetId == id);
-            if (itemConfigToDelete != null)
+            var itemConfig = _datasetAPIConfigService.GetByDatasetId(id);
+
+            if (itemConfig == null)
             {
-                _dbContext.DatasetAPIConfigs.Remove(itemConfigToDelete);
+                itemConfig = request.DatasetAPIConfig.Adapt<DatasetAPIConfig>();
+                itemConfig.DatasetId = id;
+                itemConfig.DomainEvents.Add(new StatsChangedEvent());
+                await _repository.CreateAsync(itemConfig);
             }
-            var itemConfig = request.DatasetAPIConfig.Adapt<DatasetAPIConfig>();
-            itemConfig.DatasetId = id;
-            itemConfig.DomainEvents.Add(new StatsChangedEvent());
-            await _repository.CreateAsync(itemConfig);
+            else
+            {
+                var itemConfigToUpdate = itemConfig.Update(request.DatasetAPIConfig);
+                itemConfigToUpdate.DomainEvents.Add(new StatsChangedEvent());
+                await _repository.UpdateAsync(itemConfigToUpdate);
+            }
         }
         else if (string.Equals(dataType.Code, "file", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
         {
-            var itemConfigToDelete = _dbContext.DatasetFileConfigs.FirstOrDefault(x => x.DatasetId == id);
-            if (itemConfigToDelete != null)
-            {
-                _dbContext.DatasetFileConfigs.Remove(itemConfigToDelete);
-            }
+            var itemConfig = _datasetFileConfigService.GetByDatasetId(id);
 
-            var itemConfig = request.DatasetFileConfig.Adapt<DatasetFileConfig>();
-            itemConfig.DatasetId = id;
-            itemConfig.DomainEvents.Add(new StatsChangedEvent());
-            await _repository.CreateAsync(itemConfig);
+            if (itemConfig == null)
+            {
+                itemConfig = request.DatasetFileConfig.Adapt<DatasetFileConfig>();
+                itemConfig.DatasetId = id;
+                itemConfig.DomainEvents.Add(new StatsChangedEvent());
+                await _repository.CreateAsync(itemConfig);
+            }
+            else
+            {
+                var itemConfigToUpdate = itemConfig.Update(request.DatasetFileConfig);
+                itemConfigToUpdate.DomainEvents.Add(new StatsChangedEvent());
+                await _repository.UpdateAsync(itemConfigToUpdate);
+            }
         }
         else if (string.Equals(dataType.Code, "excel", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
         {
-            var itemConfigToDelete = _dbContext.DatasetFileConfigs.FirstOrDefault(x => x.DatasetId == id);
-            if (itemConfigToDelete != null)
-            {
-                _dbContext.DatasetFileConfigs.Remove(itemConfigToDelete);
-            }
+            var itemConfig = _datasetFileConfigService.GetByDatasetId(id);
 
-            var itemConfig = request.DatasetFileConfig.Adapt<DatasetFileConfig>();
-            itemConfig.DatasetId = id;
-            itemConfig.DomainEvents.Add(new StatsChangedEvent());
-            await _repository.CreateAsync(itemConfig);
+            if (itemConfig == null)
+            {
+                itemConfig = request.DatasetFileConfig.Adapt<DatasetFileConfig>();
+                itemConfig.DatasetId = id;
+                itemConfig.DomainEvents.Add(new StatsChangedEvent());
+                await _repository.CreateAsync(itemConfig);
+            }
+            else
+            {
+                var itemConfigToUpdate = itemConfig.Update(request.DatasetFileConfig);
+                itemConfigToUpdate.DomainEvents.Add(new StatsChangedEvent());
+                await _repository.UpdateAsync(itemConfigToUpdate);
+            }
         }
         else if (string.Equals(dataType.Code, "database", StringComparison.OrdinalIgnoreCase) && request.DatasetDBConfig != null)
         {
-            var itemConfigToDelete = _dbContext.DatasetDBConfigs.FirstOrDefault(x => x.DatasetId == id);
-            if (itemConfigToDelete != null)
+            var itemConfig = _datasetDBConfigService.GetByDatasetId(id);
+
+            if (itemConfig == null)
             {
-                _dbContext.DatasetDBConfigs.Remove(itemConfigToDelete);
+                itemConfig = request.DatasetDBConfig.Adapt<DatasetDBConfig>();
+                itemConfig.DatasetId = id;
+                itemConfig.DomainEvents.Add(new StatsChangedEvent());
+                await _repository.CreateAsync(itemConfig);
+            }
+            else
+            {
+                var itemConfigToUpdate = itemConfig.Update(request.DatasetDBConfig);
+                itemConfigToUpdate.DomainEvents.Add(new StatsChangedEvent());
+                await _repository.UpdateAsync(itemConfigToUpdate);
             }
 
-            _datasetDBConfigService.DeleteByDatasetId(id);
-            var itemConfig = request.DatasetDBConfig.Adapt<DatasetDBConfig>();
-            itemConfig.DatasetId = id;
-            itemConfig.DomainEvents.Add(new StatsChangedEvent());
-            await _repository.CreateAsync(itemConfig);
         }
 
         var itemToUpdate = item.Update(request);
         itemToUpdate.DomainEvents.Add(new StatsChangedEvent());
         await _repository.UpdateAsync(itemToUpdate);
         await _repository.SaveChangesAsync();
-
         return await Result<Guid>.SuccessAsync(id);
     }
 
