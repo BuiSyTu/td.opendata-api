@@ -121,13 +121,6 @@ public class DatasetService : IDatasetService
             itemConfig.DomainEvents.Add(new StatsChangedEvent());
             await _repository.CreateAsync(itemConfig);
         }
-        else if (string.Equals(dataType.Code, "excel", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
-        {
-            var itemConfig = request.DatasetFileConfig.Adapt<DatasetFileConfig>();
-            itemConfig.DatasetId = itemDatasetId;
-            itemConfig.DomainEvents.Add(new StatsChangedEvent());
-            await _repository.CreateAsync(itemConfig);
-        }
         else if (string.Equals(dataType.Code, "database", StringComparison.OrdinalIgnoreCase) && request.DatasetDBConfig != null)
         {
             var itemConfig = request.DatasetDBConfig.Adapt<DatasetDBConfig>();
@@ -268,7 +261,10 @@ public class DatasetService : IDatasetService
             await _repository.SaveChangesAsync();
         }
 
-        if (dataTypeCode == "excel")
+        var excelExtensions = new List<string> { ".xlsx", ".xlsm", ".xlsb", ".xltx", ".xltm", ".xls", "xlt", "xlam", "xla", "xlw", "xlr" };
+        bool isExcel = dataTypeCode == "file"
+            && excelExtensions.Contains(Path.GetExtension(dataset?.DatasetFileConfig?.FileName));
+        if (isExcel)
         {
             byte[] fileBytes = await File.ReadAllBytesAsync(dataset.DatasetFileConfig.FileUrl);
             string? dataText = _excelReader.GetJsonData(new MemoryStream(fileBytes), dataset.DatasetFileConfig.SheetName);
@@ -315,24 +311,6 @@ public class DatasetService : IDatasetService
             }
         }
         else if (string.Equals(dataType.Code, "file", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
-        {
-            var itemConfig = _datasetFileConfigService.GetByDatasetId(id);
-
-            if (itemConfig == null)
-            {
-                itemConfig = request.DatasetFileConfig.Adapt<DatasetFileConfig>();
-                itemConfig.DatasetId = id;
-                itemConfig.DomainEvents.Add(new StatsChangedEvent());
-                await _repository.CreateAsync(itemConfig);
-            }
-            else
-            {
-                var itemConfigToUpdate = itemConfig.Update(request.DatasetFileConfig);
-                itemConfigToUpdate.DomainEvents.Add(new StatsChangedEvent());
-                await _repository.UpdateAsync(itemConfigToUpdate);
-            }
-        }
-        else if (string.Equals(dataType.Code, "excel", StringComparison.OrdinalIgnoreCase) && request.DatasetFileConfig != null)
         {
             var itemConfig = _datasetFileConfigService.GetByDatasetId(id);
 
