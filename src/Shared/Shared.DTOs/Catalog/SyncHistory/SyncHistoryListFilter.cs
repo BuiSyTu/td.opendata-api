@@ -7,4 +7,5 @@ public class SyncHistoryListFilter : PaginationFilter
     public Guid? DatasetId { get; set; }
     public string? DataTypeCode { get; set; }
     public string? OfficeCode { get; set; }
+    public bool? IsPortal { get; set; }
 }
