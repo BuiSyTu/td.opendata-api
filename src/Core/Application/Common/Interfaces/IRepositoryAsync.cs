@@ -77,7 +77,7 @@ public interface IRepositoryAsync : ITransientService
     where TDto : IDto;
 
     /// <summary>
-    /// Get count from filters
+    /// Get count from filters.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="filters"></param>

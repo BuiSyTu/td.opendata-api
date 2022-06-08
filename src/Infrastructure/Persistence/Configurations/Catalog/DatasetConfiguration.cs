@@ -29,7 +29,7 @@ internal class DatasetConfiguration : IEntityTypeConfiguration<Dataset>
         builder.HasOne<DatasetFileConfig>(s => s.DatasetFileConfig).WithOne(ad => ad.Dataset).HasForeignKey<DatasetFileConfig>(ad => ad.DatasetId).OnDelete(DeleteBehavior.Cascade);
         builder.HasOne<DatasetDBConfig>(s => s.DatasetDBConfig).WithOne(ad => ad.Dataset).HasForeignKey<DatasetDBConfig>(ad => ad.DatasetId).OnDelete(DeleteBehavior.Cascade);
         builder.HasMany<DatasetOffice>(x => x.DatasetOffices).WithOne(s => s.Dataset).HasForeignKey(s => s.DatasetId).OnDelete(DeleteBehavior.Cascade);
-
+        builder.HasMany<SyncHistory>(x => x.SyncHistories).WithOne(s => s.Dataset).HasForeignKey(s => s.DatasetId).OnDelete(DeleteBehavior.Cascade);
     }
 
 }

@@ -12,5 +12,8 @@ public class DatasetListFilter : PaginationFilter
     public int? ApproveState { get; set; }
     public bool? Visibility { get; set; }
     public string? DataTypeCode { get; set; }
-    public string? author { get; set; }
+    public string? Author { get; set; }
+    public string? OfficeCode { get; set; }
+    public bool? IsPortal { get; set; }
+    public bool? IsOffice { get; set; }
 }

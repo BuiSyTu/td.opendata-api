@@ -41,6 +41,7 @@ public class ApplicationDbContext : BaseDbContext
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<Attachment> Attachments => Set<Attachment>();
     public DbSet<DatasetOffice> DatasetOffices => Set<DatasetOffice>();
+    public DbSet<SyncHistory> SyncHistories => Set<SyncHistory>();
 
     public DbSet<DataSource> DataSources => Set<DataSource>();
     public DbSet<MiningSource> MiningSources => Set<MiningSource>();
@@ -119,6 +120,7 @@ public class ApplicationDbContext : BaseDbContext
         builder.ApplyConfiguration(new TagConfiguration());
         builder.ApplyConfiguration(new DatasetOfficeConfiguration());
         builder.ApplyConfiguration(new AttachmentConfiguration());
+        builder.ApplyConfiguration(new SyncHistoryConfiguration());
 
         builder.ApplyConfiguration(new DocumentTypeConfiguration());
         builder.ApplyConfiguration(new MiningSourceConfiguration());

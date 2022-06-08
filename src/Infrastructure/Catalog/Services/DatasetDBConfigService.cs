@@ -13,7 +13,6 @@ public class DatasetDBConfigService : IDatasetDBConfigService
         _dbContext = dbContext;
     }
 
-
     public void DeleteByDatasetId(Guid datasetId)
     {
         var item = _dbContext.DatasetDBConfigs.FirstOrDefault(x => x.DatasetId == datasetId);

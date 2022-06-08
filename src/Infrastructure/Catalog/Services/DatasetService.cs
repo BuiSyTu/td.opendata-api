@@ -214,7 +214,10 @@ public class DatasetService : IDatasetService
         filters.Add(filter.ApproveState.HasValue, x => x.ApproveState == filter.ApproveState!.Value);
         filters.Add(filter.Visibility.HasValue, x => x.Visibility == filter.Visibility.Value);
         filters.Add(!string.IsNullOrEmpty(filter.DataTypeCode), x => x.DataType.Code == filter.DataTypeCode);
-        filters.Add(!string.IsNullOrEmpty(filter.author), x => x.Author == filter.author);
+        filters.Add(!string.IsNullOrEmpty(filter.Author), x => x.Author == filter.Author);
+        filters.Add(!string.IsNullOrEmpty(filter.OfficeCode), x => x.OfficeCode == filter.OfficeCode);
+        filters.Add(filter.IsPortal.HasValue && filter.IsPortal.Value, x => string.IsNullOrEmpty(x.OfficeCode));
+        filters.Add(filter.IsOffice.HasValue && filter.IsOffice.Value, x => !string.IsNullOrEmpty(x.OfficeCode));
 
         var specification = new PaginationSpecification<Dataset>
         {
@@ -241,6 +244,7 @@ public class DatasetService : IDatasetService
 #pragma warning restore CS8603 // Possible null reference return.
         Dataset? dataset = await _repository.GetByIdAsync<Dataset>(id, includes);
         string? dataTypeCode = dataset?.DataType?.Code?.ToLower();
+        bool isSynced = false;
 
         if (dataTypeCode == "webapi")
         {
@@ -259,6 +263,7 @@ public class DatasetService : IDatasetService
             // Change state isSynced
             dataset.IsSynced = true;
             await _repository.SaveChangesAsync();
+            isSynced = true;
         }
 
         var excelExtensions = new List<string> { ".xlsx", ".xlsm", ".xlsb", ".xltx", ".xltm", ".xls", "xlt", "xlam", "xla", "xlw", "xlr" };
@@ -282,6 +287,19 @@ public class DatasetService : IDatasetService
             // Change state isSynced
             dataset.IsSynced = true;
             await _repository.SaveChangesAsync();
+            isSynced = true;
+        }
+
+        if (isSynced)
+        {
+            SyncHistory syncHistory = new()
+            {
+                DatasetId = id,
+                SyncTime = DateTime.Now
+            };
+
+            _dbContext.SyncHistories.Add(syncHistory);
+            await _dbContext.SaveChangesAsync();
         }
     }
 
@@ -396,7 +414,6 @@ public class DatasetService : IDatasetService
                 Count = 0
             })
             .ToList();
-
 
         var datasets = _dbContext.Datasets
             .GroupBy(x => x.Organization.Name)

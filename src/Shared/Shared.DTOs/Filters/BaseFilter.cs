@@ -11,4 +11,6 @@ public class BaseFilter
     /// Keyword to Search in All the available columns of the Resource.
     /// </summary>
     public string? Keyword { get; set; }
+
+    public bool Count { get; set; } = false;
 }

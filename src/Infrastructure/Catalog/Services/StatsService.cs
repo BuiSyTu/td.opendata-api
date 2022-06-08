@@ -6,8 +6,10 @@ using TD.OpenData.WebApi.Shared.DTOs.Catalog;
 using TD.OpenData.WebApi.Shared.DTOs.Dashboard;
 using Microsoft.Extensions.Localization;
 using TD.OpenData.WebApi.Application.Catalog.Interfaces;
+using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
+using TD.OpenData.WebApi.Application.Dashboard;
 
-namespace TD.OpenData.WebApi.Application.Dashboard;
+namespace TD.OpenData.WebApi.Infrastructure.Catalog.Services;
 
 public class StatsService : IStatsService
 {
@@ -16,19 +18,22 @@ public class StatsService : IStatsService
     private readonly IRepositoryAsync _repository;
     private readonly IStringLocalizer<StatsService> _localizer;
     private readonly IDatasetService _datasetService;
+    private readonly ApplicationDbContext _dbContext;
 
     public StatsService(
         IRepositoryAsync repository,
         IRoleService roleService,
         IUserService userService,
         IStringLocalizer<StatsService> localizer,
-        IDatasetService datasetService)
+        IDatasetService datasetService,
+        ApplicationDbContext dbContext)
     {
         _repository = repository;
         _roleService = roleService;
         _userService = userService;
         _localizer = localizer;
         _datasetService = datasetService;
+        _dbContext = dbContext;
     }
 
     public async Task<IResult<StatsDto>> GetDataAsync()
@@ -67,6 +72,9 @@ public class StatsService : IStatsService
             Category = await _repository.GetCountAsync<Category>(),
             Dataset = await _repository.GetCountAsync<Dataset>(),
             Organization = await _repository.GetCountAsync<Organization>(),
+            ProviderType = await _repository.GetCountAsync<ProviderType>(),
+            DataType = await _repository.GetCountAsync<DataType>(),
+            View = _dbContext.Datasets.Sum(x => x.View.HasValue ? x.View.Value : 0)
         };
 
         return await Result<OverViewWidget>.SuccessAsync(widget);

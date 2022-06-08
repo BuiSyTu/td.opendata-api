@@ -1,5 +1,6 @@
 using TD.OpenData.WebApi.Application.Catalog.Interfaces;
 using TD.OpenData.WebApi.Shared.DTOs.Catalog;
+using TD.OpenData.WebApi.Shared.DTOs.Catalog.SyncHistory;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using TD.OpenData.WebApi.Application.Forward;

@@ -355,7 +355,6 @@ public class RepositoryAsync : IRepositoryAsync
         return _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-
     // Dapper
     public async Task<IReadOnlyList<T>> QueryAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
         =>
