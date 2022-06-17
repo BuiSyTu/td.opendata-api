@@ -20,6 +20,8 @@ public class CreateDatasetRequest : CreatedRequest, IMustBeValid
     public Guid? CategoryId { get; set; }
     public Guid? ProviderTypeId { get; set; }
     public string? TableName { get; set; }
+    public string? OfficeCode { get; set; }
+    public string? OfficeName { get; set; }
 
     public CreateDatasetAPIConfigRequest? DatasetAPIConfig { get; set; }
     public CreateDatasetDBConfigRequest? DatasetDBConfig { get; set; }
