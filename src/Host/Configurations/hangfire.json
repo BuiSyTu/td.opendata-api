@@ -21,7 +21,7 @@
     },
     "Storage": {
       "StorageProvider": "mssql",
-      "ConnectionString": "Server=192.168.2.29; Database=OpenDataWebAPIHangfire;User Id=sa; Password=11091991; Trusted_Connection=False; MultipleActiveResultSets=true;",
+      "ConnectionString": "Server=10.10.10.50,1469; Database=OpenDataWebAPIHangfire;User Id=tdcongdan; Password=Tandan@123; Trusted_Connection=False; MultipleActiveResultSets=true;",
       "Options": {
         "CommandBatchMaxTimeout": "00:05:00",
         "QueuePollInterval": "00:00:01",

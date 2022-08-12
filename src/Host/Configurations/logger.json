@@ -42,7 +42,7 @@
       {
         "Name": "MSSqlServer",
         "Args": {
-          "connectionString": "Server=192.168.2.29; Database=OpenDataWebAPILogs;User Id=sa; Password=11091991; Trusted_Connection=False; MultipleActiveResultSets=true;",
+          "connectionString": "Server=10.10.10.50,1469; Database=OpenDataWebAPILogs;User Id=tdcongdan; Password=Tandan@123; Trusted_Connection=False; MultipleActiveResultSets=true;",
           "sinkOptionsSection": {
             "tableName": "Logs",
             "schemaName": "EventLogging",
