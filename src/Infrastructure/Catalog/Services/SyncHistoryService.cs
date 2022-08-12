@@ -11,23 +11,33 @@ using Microsoft.Extensions.Localization;
 using Mapster;
 using TD.OpenData.WebApi.Domain.Common.Contracts;
 using System.Linq.Expressions;
+using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace TD.OpenData.WebApi.Infrastructure.Catalog.Services;
 
 public class SyncHistoryService : ISyncHistoryService
 {
+    private readonly ApplicationDbContext _context;
     private readonly IStringLocalizer<DataTypeService> _localizer;
     private readonly IRepositoryAsync _repository;
 
-    public SyncHistoryService(IRepositoryAsync repository, IStringLocalizer<DataTypeService> localizer)
+    public SyncHistoryService(
+        ApplicationDbContext context,
+        IRepositoryAsync repository,
+        IStringLocalizer<DataTypeService> localizer)
     {
+        _context = context;
         _repository = repository;
         _localizer = localizer;
     }
 
     public async Task<Result<SyncHistory>> GetDetailsAsync(Guid id)
     {
-        var item = await _repository.GetByIdAsync<SyncHistory>(id);
+        var item = await _context.SyncHistories
+            .Include(x => x.Dataset)
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
         return await Result<SyncHistory>.SuccessAsync(item);
     }
 
@@ -61,5 +71,13 @@ public class SyncHistoryService : ISyncHistoryService
         filters.Add(!string.IsNullOrEmpty(filter.OfficeCode), x => x.Dataset.OfficeCode == filter.OfficeCode);
 
         return await _repository.GetCountAsync(filters);
+    }
+
+    public async Task<Result<Guid>> DeleteAsync(Guid id)
+    {
+        var itemToDelete = await _repository.RemoveByIdAsync<SyncHistory>(id);
+        itemToDelete.DomainEvents.Add(new StatsChangedEvent());
+        await _repository.SaveChangesAsync();
+        return await Result<Guid>.SuccessAsync(id);
     }
 }

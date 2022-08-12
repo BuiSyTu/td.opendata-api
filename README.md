@@ -1,4 +1,4 @@
-	
+
 ## Migrations
 This command is to be executed from the Host Directory of the project.
 ```powershell
@@ -23,8 +23,6 @@ dotnet ef migrations add Update_1 --project .././Migrators/Migrators.MSSQL/ --co
 
 dotnet ef migrations script {FROM_MIGRATION} {TO_MiGRATION} --context ApplicationDbContext -o ./script.sql
 
-number
-string
-datetime
-boolean
-decimal
+## publish
+
+dotnet publish -o ./publish

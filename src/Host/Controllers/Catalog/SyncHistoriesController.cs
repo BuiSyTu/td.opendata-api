@@ -34,4 +34,12 @@ public class SyncHistoriesController : BaseController
         var product = await _service.GetDetailsAsync(id);
         return Ok(product);
     }
+
+    [HttpDelete("{id:guid}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> DeleteAsync(Guid id)
+    {
+        var itemId = await _service.DeleteAsync(id);
+        return Ok(itemId);
+    }
 }

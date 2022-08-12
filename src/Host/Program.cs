@@ -20,7 +20,11 @@ try
 
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
-    builder.Services.AddControllers().AddFluentValidation();
+    builder.Services.AddControllers()
+        .AddFluentValidation()
+        .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    );
 
     var app = builder.Build();
 

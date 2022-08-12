@@ -11,4 +11,5 @@ public interface ISyncHistoryService : ITransientService
     Task<Result<SyncHistory>> GetDetailsAsync(Guid id);
     Task<PaginatedResult<SyncHistoryDto>> SearchAsync(SyncHistoryListFilter filter);
     Task<int> CountAsync(SyncHistoryListFilter filter);
+    Task<Result<Guid>> DeleteAsync(Guid id);
 }
