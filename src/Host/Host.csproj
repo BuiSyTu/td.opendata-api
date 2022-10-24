@@ -5,7 +5,7 @@
         <AssemblyName>TD.OpenData.WebApi.Host</AssemblyName>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
         <PackageReference Include="Hangfire.Console.Extensions.Serilog" Version="1.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.6" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
