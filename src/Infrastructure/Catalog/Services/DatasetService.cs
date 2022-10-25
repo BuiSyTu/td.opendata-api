@@ -18,6 +18,7 @@ using Hangfire;
 using TD.OpenData.WebApi.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using TD.OpenData.WebApi.Shared.DTOs.Dashboard;
+using Microsoft.AspNetCore.Http;
 
 namespace TD.OpenData.WebApi.Infrastructure.Catalog.Services;
 
@@ -159,6 +160,19 @@ public class DatasetService : IDatasetService
         ";
 
         var result = await _repository.QueryAsync<object>(sql);
+        return result;
+    }
+
+    public async Task<object> GetRawAsync(Guid id)
+    {
+        var dataset = await _repository.GetByIdAsync<Dataset>(id);
+        if (dataset is null) throw new NullReferenceException("Dataset could not be found");
+
+        var result = new
+        {
+            Url = ""
+        };
+
         return result;
     }
 

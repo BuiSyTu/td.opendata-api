@@ -9,6 +9,8 @@ public interface IDatasetService : ITransientService
 {
     Task<object> GetDataAsync(Guid id, string orderBy, int skip, int top);
 
+    Task<object> GetRawAsync(Guid id);
+
     Task<Result<DatasetDetailsDto>> GetDetailsAsync(Guid id);
 
     Task<PaginatedResult<DatasetDto>> SearchAsync(DatasetListFilter filter);

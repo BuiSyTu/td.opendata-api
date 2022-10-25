@@ -29,6 +29,14 @@ public class DatasetsController : BaseController
         return Ok(items);
     }
 
+    [HttpGet("{id:guid}/config")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetConfigAsync(Guid id)
+    {
+        object? items = await _service.GetRawAsync(id);
+        return Ok(items);
+    }
+
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> GetAsync([FromQuery] DatasetListFilter filter)
